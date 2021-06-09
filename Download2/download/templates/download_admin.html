@@ -1,0 +1,74 @@
+# extends 'admin.html'
+<!DOCTYPE html>
+<html>
+	# include "macros.html" ignore missing
+	<head>
+	  <title>
+		# block title
+		${_("Download")}
+		${ super() }
+		# endblock title
+	  </title>
+		# block head
+		${ super() }	  
+		# endblock head
+	</head>
+	<body>
+		# block content	
+		  <h2>Manage Downloads</h2>
+			<form class="addnew" id="adddownload" method="post" enctype="multipart/form-data">
+		      ${jmacros.form_token_input()}
+			  <fieldset>
+				<legend>Add Download:</legend>
+				<div class="field">
+				  <label>File:
+					<input type="file" name="file" required="required" /></label>
+				</div><br />
+				<div class="field">
+				  <label for="description">
+					Description:<br />
+					<input type="text" name="description" value="" required="required" size="50" /></label>
+				</div>
+			  </fieldset>
+			  <div class="buttons">
+				<input type="submit" name="submit" value="Add" />
+			  </div>
+			</form>
+			<form method="POST">
+			  ${jmacros.form_token_input()}
+			  <table class="listing" id="downloadlist">
+				<thead>
+				  <tr>
+					<th class="sel">&nbsp;</th>
+					<th>File</th>
+					<th>Description</th>
+				  </tr>
+				</thead>
+				<tbody>
+					# if not downloads:
+						<tr>
+							<td colspan="3">${_("No download data.")}</td>
+						</tr>
+					# endif					
+					# for id, file, description in downloads
+					  <tr>
+						<td class="sel"><input type="checkbox" name="sels" value="${id}"></input></td>
+						<td class="file">
+						  <a href="/admin/general/download?sel=${id}">${file}</a>
+						</td>
+						<td class="description">
+						  ${description}
+						</td>
+					  </tr>
+					# endfor
+				</tbody>
+			  </table>
+			  <div class="buttons">
+				<input type="submit" name="submit" value="Remove" />
+			  </div>
+			  <p class="help">
+			  </p>
+			</form>
+		# endblock content	
+	</body>
+</html>
