@@ -17,15 +17,14 @@ class Charts(Component):
 
     # INavigationContributor methods
     def get_active_navigation_item(self, req):
-      return 'charts'
+        return 'charts'
 
     def get_navigation_items(self, req):
         if 'CHARTS_VIEW' in req.perm:
             yield (
                 'mainnav',
                 'charts',
-                html.a('Charts',
-                href=req.href.charts())
+                html.a('Charts', href=req.href.charts())
             )
 
     # IRequstHandler methods
