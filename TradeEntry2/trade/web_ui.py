@@ -3,7 +3,12 @@ from datetime import datetime
 from trac.core import *
 from trac.util.html import html
 from trac.web.api import IRequestHandler, HTTPNotFound
-from trac.web.chrome import Chrome, INavigationContributor, add_warning, add_notice
+from trac.web.chrome import (
+                                Chrome,
+                                INavigationContributor,
+                                add_warning,
+                                add_notice
+                            )
 
 
 class TradEntry(Component):
