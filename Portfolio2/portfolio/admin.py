@@ -42,11 +42,12 @@ class PortfolioPanel(Component):
                 sel = req.args.get('sel').strip()
                 name = req.args.get('name').strip()
                 description = req.args.get('description').strip()
-                sql = "UPDATE portfolios "
-                      "SET name='{}', description='{}', "
-                      "createtime=now(), user='{}' "
-                      "WHERE id={}"
-                      .format(name, description, user, int(sel))
+                sql = (
+                          "UPDATE portfolios "
+                          "SET name='{}', description='{}', "
+                          "createtime=now(), user='{}' "
+                          "WHERE id={}"
+                      ).format(name, description, user, int(sel))
                 self.env.db_transaction(sql)
                 add_notice(req, 'Portfolio has been saved.')
         else:
