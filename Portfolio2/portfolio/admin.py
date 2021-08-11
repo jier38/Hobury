@@ -27,7 +27,7 @@ class PortfolioPanel(Component):
                           "INSERT INTO portfolios "
                           "(name, description, createtime, user) "
                           "VALUES('{}','{}',now(),'{}')"
-					  ).format(name, description, user)
+                      ).format(name, description, user)
                 self.env.db_transaction(sql)
                 add_notice(req, 'Portfolio has been added.')
             elif submit == 'Remove':
@@ -35,7 +35,7 @@ class PortfolioPanel(Component):
                 if sels is not None and len(sels) > 0:
                     for sel in sels:
                         sql = 'DELETE FROM portfolios WHERE id ={}'
-                              .format(int(sel))
+                        sql = sql.format(int(sel))
                         self.env.db_transaction(sql)
                     add_notice(req, 'Portfolio has been deleted.')
             elif submit == 'Save':
