@@ -53,9 +53,10 @@ class PortfolioPanel(Component):
         else:
             sel = req.args.get('sel')
             if sel is not None:
-                sql = "SELECT id, name, description, createtime, user "
-                      "FROM portfolios where id={}"
-                      .format(int(sel))
+                sql = (
+                          "SELECT id, name, description, createtime, user "
+                          "FROM portfolios where id={}"
+                      ).format(int(sel))
                 cursor = self.env.db_query(sql)
                 if len(cursor) > 0:
                     data['view'] = 'detail'
