@@ -23,10 +23,11 @@ class PortfolioPanel(Component):
             if submit == 'Add':
                 name = req.args.get('name').strip()
                 description = req.args.get('description').strip()
-                sql = "INSERT INTO portfolios "
-                      "(name, description, createtime, user) "
-                      "VALUES('{}','{}',now(),'{}')"
-                      .format(name, description, user)
+                sql = (
+                          "INSERT INTO portfolios "
+                          "(name, description, createtime, user) "
+                          "VALUES('{}','{}',now(),'{}')"
+					  ).format(name, description, user)
                 self.env.db_transaction(sql)
                 add_notice(req, 'Portfolio has been added.')
             elif submit == 'Remove':
@@ -43,7 +44,7 @@ class PortfolioPanel(Component):
                 description = req.args.get('description').strip()
                 sql = "UPDATE portfolios "
                       "SET name='{}', description='{}', "
-                      "createtime=now(), user='{}' " 
+                      "createtime=now(), user='{}' "
                       "WHERE id={}"
                       .format(name, description, user, int(sel))
                 self.env.db_transaction(sql)
