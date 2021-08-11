@@ -3,13 +3,15 @@ from datetime import datetime
 from trac.core import *
 from trac.util.html import html
 from trac.web.api import IRequestHandler, HTTPNotFound
-from trac.web.chrome import Chrome, INavigationContributor, add_warning, add_notice
+from trac.web.chrome import Chrome, INavigationContributor, 
+	add_warning, add_notice
 from trac.perm import IPermissionRequestor
 
 
 class Charts(Component):
 
-    implements(IRequestHandler, INavigationContributor, IPermissionRequestor)
+    implements(IRequestHandler, INavigationContributor, 
+		IPermissionRequestor)
 
     # INavigationContributor methods
 
@@ -18,7 +20,8 @@ class Charts(Component):
 
     def get_navigation_items(self, req):
         if 'CHARTS_VIEW' in req.perm:
-            yield ('mainnav', 'charts', html.a('Charts', href=req.href.charts()))
+            yield ('mainnav', 'charts', html.a('Charts', 
+				href=req.href.charts()))
 
     # IRequstHandler methods
 
