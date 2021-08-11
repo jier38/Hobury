@@ -136,10 +136,17 @@ class TradEntry(Component):
                         data['symbol'] = temp
                         data['tradedate'] = tradedate
                         add_warning(
-                            req, 'The cash/quantity exceeds the price tolerance of the last 10 days.')
+                            req,
+                            'The cash/quantity exceeds the price tolerance '
+                            'of the last 10 days.'
+                        )
                     else:
-                        sql = "INSERT INTO trades (portfolio,buysell,quantity,exchange,symbol,cash,currency,tradedate,tradeid) " \
-                            " VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+                        sql = (
+                                  "INSERT INTO trades "
+                                  "(portfolio,buysell,quantity,exchange,"
+                                  "symbol,cash,currency,tradedate,tradeid) "
+                                  "VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+                        )
                         args = (portfolio, buysell, quantity, exchange,
                                 symbol, cash, currency, tradedate, user)
                         self.env.db_transaction(sql, args)
