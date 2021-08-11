@@ -4,13 +4,23 @@ import shutil
 import unicodedata
 
 from trac.env import Environment
-from trac.core import Component, implements, ExtensionPoint, Interface, TracError
+from trac.core import (
+    Component,
+    implements,
+    ExtensionPoint,
+    Interface,
+    TracError
+)
 from trac.util.html import html
 from trac.admin.api import IAdminPanelProvider
 from trac.web import IRequestHandler
 from trac.perm import IPermissionRequestor
 from trac.web.chrome import (
-    INavigationContributor, ITemplateProvider, add_notice, add_warning)
+    INavigationContributor,
+    ITemplateProvider,
+    add_notice,
+    add_warning
+)
 
 from trac.config import BoolOption, IntOption, ListOption, Option, PathOption
 from trac.resource import Resource
@@ -24,13 +34,20 @@ class Download(Component):
     implements(INavigationContributor, IRequestHandler,
                IAdminPanelProvider, ITemplateProvider, IPermissionRequestor)
 
-    path = PathOption('download', 'path', '../download',
-                      doc="Path where to store uploaded downloads.")
+    path = PathOption(
+               'download',
+               'path',
+               '../download',
+               doc="Path where to store uploaded downloads."
+           )
 
-    ext = ListOption('download', 'ext', 'zip,gz,bz2,rar',
-                     doc="""List of file extensions allowed to upload. Set to 'all'
-            to specify that any file extensions is allowed.
-            """)
+    ext = ListOption(
+              'download',
+              'ext',
+              'zip,gz,bz2,rar',
+              doc="""List of file extensions allowed to upload. Set to 'all'
+                  to specify that any file extensions is allowed."""
+          )
 
     max_size = IntOption('download', 'max_size', 268697600,
                          """Maximum allowed file size (in bytes) for downloads. Default
@@ -54,7 +71,8 @@ class Download(Component):
         data = {}
         self.do_action(req)
         cursor = self.env.db_query(
-            "SELECT id, file, description FROM download ORDER BY id")
+                     'SELECT id, file, description FROM download ORDER BY id'
+                 )
         data['downloads'] = [(row[0], row[1], row[2]) for row in cursor]
         return 'download_list.html', data, {}
 
@@ -68,7 +86,9 @@ class Download(Component):
         data = {}
         self.do_action(req)
         cursor = self.env.db_query(
-            "SELECT id, file, description, size, time, author FROM download ORDER BY id")
+                     'SELECT id, file, description, size, time, author ' +
+                     'FROM download ORDER BY id'
+                 )
         data['downloads'] = [(row[0], row[1], row[2]) for row in cursor]
         return 'download_admin.html', data, {}
 
@@ -96,7 +116,9 @@ class Download(Component):
 
     def get_download_id_by_time(self, time):
         cursor = self.env.db_query(
-            "SELECT id, file, description, size, time, author FROM download where time={}".format(time))
+                     'SELECT id, file, description, size, time, author ' +
+			         'FROM download where time={}'.format(time)
+                 )
         for row in cursor:
             return row[0]
         return {}
@@ -122,8 +144,10 @@ class Download(Component):
         # Try to normalize the filename to unicode NFC if we can.
         # Files uploaded from OS X might be in NFD.
         self.log.debug("input filename: %s", file.filename)
-        filename = unicodedata.normalize('NFC',
-                                         to_unicode(file.filename, 'utf-8'))
+        filename = unicodedata.normalize(
+                       'NFC',
+                       to_unicode(file.filename, 'utf-8')
+                   )
         filename = filename.replace('\\', '/').replace(':', '/')
         filename = os.path.basename(filename)
         self.log.debug("output filename: %s", filename)
@@ -137,8 +161,8 @@ class Download(Component):
                             "Upload failed")
 
         # Add new download to DB.
-        sql = "INSERT INTO download (file,description,size,time,author) " \
-            " VALUES(%s,%s,%s,%s,%s)"
+        sql = 'INSERT INTO download (file,description,size,time,author) ' +
+              'VALUES(%s,%s,%s,%s,%s)'
         args = (download['file'], download['description'],
                 download['size'], download['time'], download['author'])
         self.env.db_transaction(sql, args)
@@ -172,9 +196,11 @@ class Download(Component):
                 os.rmdir(path.encode('utf-8'))
             except:
                 pass
-            raise TracError("Error storing file %s. Does the directory "
-                            "specified in path config option of [downloads] "
-                            "section of trac.ini exist?" % download['file'])
+            raise TracError(
+                "Error storing file %s. Does the directory "
+                "specified in path config option of [downloads] "
+                "section of trac.ini exist?" % download['file']
+            )
 
     def do_action(self, req):
         if req.method == "POST":
@@ -191,8 +217,9 @@ class Download(Component):
                     'author': req.authname
                 }
                 self.log.debug("FileUpload filename:" + download['file'])
-                self.log.debug("FileUpload description:" +
-                               download['description'])
+                self.log.debug(
+                    "FileUpload description:" + download['description']
+                )
                 self.log.debug("FileUpload size:", download['size'])
                 self.log.debug("FileUpload time:", download['time'])
                 self.log.debug("FileUpload author:" + download['author'])
@@ -213,8 +240,8 @@ class Download(Component):
             # Get download.
             download_id = req.args.get('sel') or 0
             if download_id > 0:
-                sql = "SELECT file, description FROM download where id={}".format(
-                    download_id)
+			    sql = 'SELECT file, description FROM download where id={}'
+                sql = sql.format(download_id)
                 cursor = self.env.db_query(sql)
                 if len(cursor) > 0:
                     fn = cursor[0][0]
@@ -224,14 +251,16 @@ class Download(Component):
 
                 # Get download file path.
                 filename = os.path.basename(fn)
-                filepath = os.path.join(self.path,
-                                        to_unicode(download_id),
-                                        filename)
+                filepath = os.path.join(
+                               self.path,
+                               to_unicode(download_id),
+                               filename
+                           )
                 filepath = os.path.normpath(filepath)
 
                 # Increase downloads count.
-                sql = "UPDATE download SET count=count+1 WHERE id ={}".format(
-                    download_id)
+				sql = 'UPDATE download SET count=count+1 WHERE id ={}'
+                sql = sql.format(download_id)
                 self.env.db_transaction(sql)
 
                 # Guess mime type.
@@ -246,9 +275,9 @@ class Download(Component):
                     mime_type = mime_type + '; charset=' + charset
 
                 # Return uploaded file to request.
-                req.send_header('Content-Disposition',
-                                'attachment;filename="%s"'
-                                % os.path.normpath(fn))
-                req.send_header('Content-Description',
-                                description)
+                req.send_header(
+                    'Content-Disposition',
+                    'attachment;filename="%s"' % os.path.normpath(fn)
+                )
+                req.send_header('Content-Description', description)
                 req.send_file(filepath.encode('utf-8'), mime_type)
