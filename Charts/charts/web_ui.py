@@ -6,6 +6,7 @@ from trac.web.api import IRequestHandler, HTTPNotFound
 from trac.web.chrome import Chrome, INavigationContributor, add_warning, add_notice
 from trac.perm import IPermissionRequestor
 
+
 class Charts(Component):
 
     implements(IRequestHandler, INavigationContributor, IPermissionRequestor)

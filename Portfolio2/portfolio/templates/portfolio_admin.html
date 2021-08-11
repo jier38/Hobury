@@ -1,109 +1,115 @@
 {# Copyright (C) 2007-2020 CodeResort.com - BV Network AS (simon-code@bvnetwork.no)
 
-  This software is licensed as described in the file COPYING, which
-  you should have received as part of this distribution.
+This software is licensed as described in the file COPYING, which
+you should have received as part of this distribution.
 #}
 # extends 'admin.html'
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>
-      # block admintitle
-      ${_("Portfolio Admin")}
-      # endblock admintitle
-    </title>
-    # block head
-    ${ super() }
-    # endblock head
-  </head>
 
-  <body>
-    # block adminpanel
-    <h2>${_("Portfolio")}</h2>
+<head>
+	<title>
+		# block admintitle
+		${_("Portfolio Admin")}
+		# endblock admintitle
+	</title>
+	# block head
+	${ super() }
+	# endblock head
+</head>
 
-		# if 'detail' in view:
-		  <form class="mod" id="modportfolio" method="post">
-		    ${jmacros.form_token_input()}
-			<fieldset>
-			  <legend>${_("Modify Portfolio:")}</legend>
-			  <div class="field">
+<body>
+	# block adminpanel
+	<h2>${_("Portfolio")}</h2>
+
+	# if 'detail' in view:
+	<form class="mod" id="modportfolio" method="post">
+		${jmacros.form_token_input()}
+		<fieldset>
+			<legend>${_("Modify Portfolio:")}</legend>
+			<div class="field">
 				<label>${_("Name:")}<br />
-				<input type="hidden" name="sel" value="$sel"/>
-				<input type="text" name="name" value="${name}" required="required" /></label>
-			  </div><br />
-			  <div class="field">
-				  <label for="description">
-					${_("Description:")}<br />              
-					<input type="text" name="description" value="${description}" required="required" size="50"/></label>             
-			  </div>
-			</fieldset>
-			<div class="buttons">
-			  <input type="button" name="submit" value="Cancel" onclick="history.go(-1);"/>
-			  <input type="submit" name="submit" value="Save" />
+					<input type="hidden" name="sel" value="$sel" />
+					<input type="text" name="name" value="${name}" required="required" /></label>
+			</div><br />
+			<div class="field">
+				<label for="description">
+					${_("Description:")}<br />
+					<input type="text" name="description" value="${description}" required="required"
+						size="50" /></label>
 			</div>
-		  </form>
+		</fieldset>
+		<div class="buttons">
+			<input type="button" name="submit" value="Cancel" onclick="history.go(-1);" />
+			<input type="submit" name="submit" value="Save" />
+		</div>
+	</form>
 
-		  # else
-			<form class="addnew" id="addportfolio" method="post">
-			  ${jmacros.form_token_input()}
-			  <fieldset>
-				<legend>${_("Add Portfolio:")}</legend>
-				<div class="field">
-				  <label>${_("Name:")}<br />
-				  <input type="text" name="name" value="" required="required" /></label>
-				</div><br />
-				<div class="field">
-				  <label for="description">
-					${_("Description:")}<br />              
-					<input type="text" name="description" value="" required="required" size="50" /></label>             
-			  </div>
-			  </fieldset>         
-			  <div class="buttons">
-				<input type="submit" name="submit" value="Add"/>
-			  </div>     
-			</form>
+	# else
+	<form class="addnew" id="addportfolio" method="post">
+		${jmacros.form_token_input()}
+		<fieldset>
+			<legend>${_("Add Portfolio:")}</legend>
+			<div class="field">
+				<label>${_("Name:")}<br />
+					<input type="text" name="name" value="" required="required" /></label>
+			</div><br />
+			<div class="field">
+				<label for="description">
+					${_("Description:")}<br />
+					<input type="text" name="description" value="" required="required" size="50" /></label>
+			</div>
+		</fieldset>
+		<div class="buttons">
+			<input type="submit" name="submit" value="Add" />
+		</div>
+	</form>
 
-			  <form method="POST">
-			    ${jmacros.form_token_input()}
-				<table class="listing" id="portfoliolist">
-				  <thead>
-					<tr><th class="sel">&nbsp;</th>
-					  <th>${_("Name")}</th><th>${_("Description")}</th><th>${_("Create Time")}</th><th>${_("Owner")}</th>
-					</tr>
-				  </thead>
-				  <tbody>
-					# if not portfolios:
-					<tr>
-						<td colspan="5">${_("No portfolio data.")}</td>
-					</tr>
-					# endif
-					# for id, name, description, createtime, user in portfolios
-					<tr>
-					  <td class="sel"><input type="checkbox" name="sels" value="${id}" /></td>
-					  <td class="name">
+	<form method="POST">
+		${jmacros.form_token_input()}
+		<table class="listing" id="portfoliolist">
+			<thead>
+				<tr>
+					<th class="sel">&nbsp;</th>
+					<th>${_("Name")}</th>
+					<th>${_("Description")}</th>
+					<th>${_("Create Time")}</th>
+					<th>${_("Owner")}</th>
+				</tr>
+			</thead>
+			<tbody>
+				# if not portfolios:
+				<tr>
+					<td colspan="5">${_("No portfolio data.")}</td>
+				</tr>
+				# endif
+				# for id, name, description, createtime, user in portfolios
+				<tr>
+					<td class="sel"><input type="checkbox" name="sels" value="${id}" /></td>
+					<td class="name">
 						<a href="/admin/portfolio/settings?sel=${id}">${name}</a>
-					  </td>
-					  <td class="description">
+					</td>
+					<td class="description">
 						${description}
-					  </td>
-					  <td class="description">
+					</td>
+					<td class="description">
 						${createtime}
-					  </td>
-					  <td class="description">
+					</td>
+					<td class="description">
 						${user}
-					  </td>                                    
-					</tr>
-					# endfor
-				  </tbody>
-				</table>
-				<div class="buttons">
-				  <input type="submit" name="submit" value="Remove" />
-				</div>
-				<p class="help">
-				</p>
-			  </form>
-		#endif
-    # endblock adminpanel
-  </body>
+					</td>
+				</tr>
+				# endfor
+			</tbody>
+		</table>
+		<div class="buttons">
+			<input type="submit" name="submit" value="Remove" />
+		</div>
+		<p class="help">
+		</p>
+	</form>
+	#endif
+	# endblock adminpanel
+</body>
 
 </html>

@@ -9,7 +9,8 @@ from trac.util.html import html
 from trac.admin.api import IAdminPanelProvider
 from trac.web import IRequestHandler
 from trac.perm import IPermissionRequestor
-from trac.web.chrome import (INavigationContributor, ITemplateProvider, add_notice, add_warning)
+from trac.web.chrome import (
+    INavigationContributor, ITemplateProvider, add_notice, add_warning)
 
 from trac.config import BoolOption, IntOption, ListOption, Option, PathOption
 from trac.resource import Resource
@@ -17,30 +18,32 @@ from trac.mimeview import Mimeview
 from trac.util.datefmt import format_datetime, to_timestamp, utc
 from trac.util.text import to_unicode
 
+
 class Download(Component):
 
-    implements(INavigationContributor, IRequestHandler, IAdminPanelProvider, ITemplateProvider,IPermissionRequestor)
+    implements(INavigationContributor, IRequestHandler,
+               IAdminPanelProvider, ITemplateProvider, IPermissionRequestor)
 
     path = PathOption('download', 'path', '../download',
-        doc="Path where to store uploaded downloads.")
+                      doc="Path where to store uploaded downloads.")
 
     ext = ListOption('download', 'ext', 'zip,gz,bz2,rar',
-        doc="""List of file extensions allowed to upload. Set to 'all'
+                     doc="""List of file extensions allowed to upload. Set to 'all'
             to specify that any file extensions is allowed.
             """)
 
     max_size = IntOption('download', 'max_size', 268697600,
-        """Maximum allowed file size (in bytes) for downloads. Default
+                         """Maximum allowed file size (in bytes) for downloads. Default
         is 256 MB.
         """)
 
-
     # INavigationContributor methods
+
     def get_active_navigation_item(self, req):
         return 'download'
 
     def get_navigation_items(self, req):
-        if 'DOWNLOAD_VIEW' in req.perm('download'):	
+        if 'DOWNLOAD_VIEW' in req.perm('download'):
             yield ('mainnav', 'ownload', html.a('Download', href=req.href.download()))
 
     # IRequestHandler methods
@@ -50,7 +53,8 @@ class Download(Component):
     def process_request(self, req):
         data = {}
         self.do_action(req)
-        cursor = self.env.db_query("SELECT id, file, description FROM download ORDER BY id")
+        cursor = self.env.db_query(
+            "SELECT id, file, description FROM download ORDER BY id")
         data['downloads'] = [(row[0], row[1], row[2]) for row in cursor]
         return 'download_list.html', data, {}
 
@@ -63,7 +67,8 @@ class Download(Component):
         # here comes the page content, handling, etc.
         data = {}
         self.do_action(req)
-        cursor = self.env.db_query("SELECT id, file, description, size, time, author FROM download ORDER BY id")
+        cursor = self.env.db_query(
+            "SELECT id, file, description, size, time, author FROM download ORDER BY id")
         data['downloads'] = [(row[0], row[1], row[2]) for row in cursor]
         return 'download_admin.html', data, {}
 
@@ -90,7 +95,8 @@ class Download(Component):
         return [view, add, admin]
 
     def get_download_id_by_time(self, time):
-        cursor = self.env.db_query("SELECT id, file, description, size, time, author FROM download where time={}".format(time))
+        cursor = self.env.db_query(
+            "SELECT id, file, description, size, time, author FROM download where time={}".format(time))
         for row in cursor:
             return row[0]
         return {}
@@ -132,8 +138,9 @@ class Download(Component):
 
         # Add new download to DB.
         sql = "INSERT INTO download (file,description,size,time,author) " \
-                            " VALUES(%s,%s,%s,%s,%s)"
-        args = (download['file'], download['description'], download['size'], download['time'], download['author'])
+            " VALUES(%s,%s,%s,%s,%s)"
+        args = (download['file'], download['description'],
+                download['size'], download['time'], download['author'])
         self.env.db_transaction(sql, args)
         self.log.debug("FileUpload SQL: %s", sql)
 
@@ -143,7 +150,7 @@ class Download(Component):
 
         # Prepare file paths.
         path = os.path.normpath(os.path.join(self.path,
-                                             to_unicode(id)))                            
+                                             to_unicode(id)))
         filepath = os.path.normpath(os.path.join(path, download['file']))
 
         self.log.debug("FileUpload path: %s", path)
@@ -168,6 +175,7 @@ class Download(Component):
             raise TracError("Error storing file %s. Does the directory "
                             "specified in path config option of [downloads] "
                             "section of trac.ini exist?" % download['file'])
+
     def do_action(self, req):
         if req.method == "POST":
             submit = req.args.get('submit').strip()
@@ -181,29 +189,32 @@ class Download(Component):
                     'time': to_timestamp(datetime.datetime.now(utc)),
                     'count': 0,
                     'author': req.authname
-                 }
+                }
                 self.log.debug("FileUpload filename:" + download['file'])
-                self.log.debug("FileUpload description:" + download['description'])
-                self.log.debug("FileUpload size:",download['size'])
+                self.log.debug("FileUpload description:" +
+                               download['description'])
+                self.log.debug("FileUpload size:", download['size'])
                 self.log.debug("FileUpload time:", download['time'])
                 self.log.debug("FileUpload author:" + download['author'])
                 # Upload file to DB and file storage.
                 self.add_download(download, file)
                 file.close()
-                
+
                 add_notice(req, 'Download has been added.')
             elif submit == 'Remove':
                 ids = req.args.getlist('sels')
                 if ids is not None and len(ids) > 0:
                     for id in ids:
-                        sql = "DELETE FROM download WHERE id ={}".format(int(id))
+                        sql = "DELETE FROM download WHERE id ={}".format(
+                            int(id))
                         self.env.db_transaction(sql)
                     add_notice(req, 'Download has been deleted.')
         else:
             # Get download.
             download_id = req.args.get('sel') or 0
-            if download_id > 0 :
-                sql = "SELECT file, description FROM download where id={}".format(download_id)
+            if download_id > 0:
+                sql = "SELECT file, description FROM download where id={}".format(
+                    download_id)
                 cursor = self.env.db_query(sql)
                 if len(cursor) > 0:
                     fn = cursor[0][0]
@@ -214,12 +225,13 @@ class Download(Component):
                 # Get download file path.
                 filename = os.path.basename(fn)
                 filepath = os.path.join(self.path,
-                                            to_unicode(download_id),
-                                            filename)
+                                        to_unicode(download_id),
+                                        filename)
                 filepath = os.path.normpath(filepath)
 
                 # Increase downloads count.
-                sql = "UPDATE download SET count=count+1 WHERE id ={}".format(download_id)
+                sql = "UPDATE download SET count=count+1 WHERE id ={}".format(
+                    download_id)
                 self.env.db_transaction(sql)
 
                 # Guess mime type.
@@ -235,8 +247,8 @@ class Download(Component):
 
                 # Return uploaded file to request.
                 req.send_header('Content-Disposition',
-                                        'attachment;filename="%s"'
-                                        % os.path.normpath(fn))
+                                'attachment;filename="%s"'
+                                % os.path.normpath(fn))
                 req.send_header('Content-Description',
-                                        description)
+                                description)
                 req.send_file(filepath.encode('utf-8'), mime_type)
