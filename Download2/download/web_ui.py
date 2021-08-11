@@ -38,21 +38,24 @@ class Download(Component):
                'download',
                'path',
                '../download',
-               doc="Path where to store uploaded downloads."
+               doc='Path where to store uploaded downloads.'
            )
 
     ext = ListOption(
               'download',
               'ext',
               'zip,gz,bz2,rar',
-              doc="""List of file extensions allowed to upload. Set to 'all'
-                  to specify that any file extensions is allowed."""
+              doc="List of file extensions allowed to upload. Set to 'all'"
+                  "to specify that any file extensions is allowed."
           )
 
-    max_size = IntOption('download', 'max_size', 268697600,
-                         """Maximum allowed file size (in bytes) for downloads. Default
-        is 256 MB.
-        """)
+    max_size = IntOption(
+                   'download',
+                   'max_size',
+                   268697600,
+                   'Maximum allowed file size (in bytes) for downloads. Default'
+                   'is 256 MB.'
+               )
 
     # INavigationContributor methods
 
@@ -61,7 +64,11 @@ class Download(Component):
 
     def get_navigation_items(self, req):
         if 'DOWNLOAD_VIEW' in req.perm('download'):
-            yield ('mainnav', 'ownload', html.a('Download', href=req.href.download()))
+            yield (
+                'mainnav',
+                'ownload', 
+                html.a('Download', href=req.href.download())
+            )
 
     # IRequestHandler methods
     def match_request(self, req):
@@ -86,7 +93,7 @@ class Download(Component):
         data = {}
         self.do_action(req)
         cursor = self.env.db_query(
-                     'SELECT id, file, description, size, time, author ' +
+                     'SELECT id, file, description, size, time, author '
                      'FROM download ORDER BY id'
                  )
         data['downloads'] = [(row[0], row[1], row[2]) for row in cursor]
@@ -116,8 +123,8 @@ class Download(Component):
 
     def get_download_id_by_time(self, time):
         cursor = self.env.db_query(
-                     'SELECT id, file, description, size, time, author ' +
-			         'FROM download where time={}'.format(time)
+                     'SELECT id, file, description, size, time, author '
+                     'FROM download where time={}'.format(time)
                  )
         for row in cursor:
             return row[0]
@@ -128,7 +135,7 @@ class Download(Component):
 
         # Test if file is uploaded.
         if not hasattr(file, 'filename') or not file.filename:
-            raise TracError("No file uploaded.")
+            raise TracError('No file uploaded.')
 
         # Get file size.
         if hasattr(file.file, 'fileno'):
@@ -139,30 +146,32 @@ class Download(Component):
             size = file.file.tell()
             file.file.seek(0)
         if size == 0:
-            raise TracError("Can't upload empty file.")
+            raise TracError('Can't upload empty file.')
 
         # Try to normalize the filename to unicode NFC if we can.
         # Files uploaded from OS X might be in NFD.
-        self.log.debug("input filename: %s", file.filename)
+        self.log.debug('input filename: %s', file.filename)
         filename = unicodedata.normalize(
                        'NFC',
                        to_unicode(file.filename, 'utf-8')
                    )
         filename = filename.replace('\\', '/').replace(':', '/')
         filename = os.path.basename(filename)
-        self.log.debug("output filename: %s", filename)
+        self.log.debug('output filename: %s', filename)
 
         return file.file, filename, size
 
     def add_download(self, download, file):
         # Check for maximum file size.
         if 0 <= self.max_size < download['size']:
-            raise TracError("Maximum file size: %s bytes" % self.max_size,
-                            "Upload failed")
+            raise TracError(
+                'Maximum file size: %s bytes' % self.max_size,
+                'Upload failed'
+            )
 
         # Add new download to DB.
-        sql = 'INSERT INTO download (file,description,size,time,author) ' +
-              'VALUES(%s,%s,%s,%s,%s)'
+        sql = 'INSERT INTO download (file,description,size,time,author) '
+		      'VALUES(%s,%s,%s,%s,%s)'
         args = (download['file'], download['description'],
                 download['size'], download['time'], download['author'])
         self.env.db_transaction(sql, args)
@@ -170,15 +179,15 @@ class Download(Component):
 
         # Get inserted download by time to get its ID.
         id = self.get_download_id_by_time(download['time'])
-        self.log.debug("FileUpload id: %s", id)
+        self.log.debug('FileUpload id: %s', id)
 
         # Prepare file paths.
         path = os.path.normpath(os.path.join(self.path,
                                              to_unicode(id)))
         filepath = os.path.normpath(os.path.join(path, download['file']))
 
-        self.log.debug("FileUpload path: %s", path)
-        self.log.debug("FileUpload filepath: %s", filepath)
+        self.log.debug('FileUpload path: %s', path)
+        self.log.debug('FileUpload filepath: %s', filepath)
 
         # Store uploaded image.
         try:
@@ -240,7 +249,7 @@ class Download(Component):
             # Get download.
             download_id = req.args.get('sel') or 0
             if download_id > 0:
-			    sql = 'SELECT file, description FROM download where id={}'
+                sql = 'SELECT file, description FROM download where id={}'
                 sql = sql.format(download_id)
                 cursor = self.env.db_query(sql)
                 if len(cursor) > 0:
