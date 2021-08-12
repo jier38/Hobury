@@ -1,11 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Trac plugin proving a full-featured, self-contained Blog.
-
-License: BSD
-
-(c) 2007 ::: www.CodeResort.com - BV Network AS (simon-code@bvnetwork.no)
-"""
 
 from setuptools import setup
 
