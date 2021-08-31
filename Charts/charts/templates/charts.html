@@ -107,33 +107,23 @@
 					let holding = holdings[lines[i][0][2]];
 					let holdingDate = holding && holding[0];
 
-					if (holdingDate) {
-						prices.plot = $.jqplot('chart' + i.toString(), [lines[i], mLines[i], sLines[i]], {
-							title: lines[i][0][3] + " <img src='chrome/site/" + lines[i][0][3].toLowerCase() + ".png'> " + lines[i][0][2], height: 360, highlighter: { show: true }, cursor: { show: true, zoom: true }, grid: { background: '#fff' },
-							series: [{ lineWidth: 0.5, color: '#ccc', markerOptions: { show: false } }, { yaxis: 'y2axis', lineWidth: 0.8, color: 'blue', markerOptions: { show: false } }, { yaxis: 'y2axis', lineWidth: 0.8, color: 'lightskyblue', markerOptions: { show: false } }],
-							axes: { xaxis: { renderer: $.jqplot.DateAxisRenderer, tickOptions: { formatString: '%Y-%m-%d', showGridline: false } }, yaxis: { tickOptions: { formatString: "%.2f", showGridline: false } }, y2axis: { tickOptions: { formatString: "%.3f" }, tickInterval: 0.1, min: 0, max: 1 } },
-							// vertical line to display date of holding; variable holdingDate is used as boolean in the show-attribute
-							canvasOverlay: {
-								show: true,
-								objects: [
-									{ verticalLine: { x: new $.jsDate(holdingDate).getTime(), lineWidth: 0.5, shadow: false } },
-									{ rectangle: { xminOffset: "0px", xmaxOffset: "0px", yminOffset: "245px", ymaxOffset: "0px", color: "rgba(0, 0, 0, 0.5)" } }]
-							}
-						});
-					} else {
-						prices.plot = $.jqplot('chart' + i.toString(), [lines[i], mLines[i], sLines[i]], {
-							title: lines[i][0][3] + " <img src='chrome/site/" + lines[i][0][3].toLowerCase() + ".png'> " + lines[i][0][2], height: 360, highlighter: { show: true }, cursor: { show: true, zoom: true }, grid: { background: '#fff' },
-							series: [{ lineWidth: 0.5, color: '#ccc', markerOptions: { show: false } }, { yaxis: 'y2axis', lineWidth: 0.8, color: 'blue', markerOptions: { show: false } }, { yaxis: 'y2axis', lineWidth: 0.8, color: 'lightskyblue', markerOptions: { show: false } }],
-							axes: { xaxis: { renderer: $.jqplot.DateAxisRenderer, tickOptions: { formatString: '%Y-%m-%d', showGridline: false } }, yaxis: { tickOptions: { formatString: "%.2f", showGridline: false } }, y2axis: { tickOptions: { formatString: "%.3f" }, tickInterval: 0.1, min: 0, max: 1 } },
-							// vertical line to display date of holding; variable holdingDate is used as boolean in the show-attribute
-							canvasOverlay: {
-								show: true,
-								objects: [
-									{ rectangle: { xminOffset: "0px", xmaxOffset: "0px", yminOffset: "0px", ymaxOffset: "245px", color: "rgba(0, 0, 0, 0.5)" } }]
-							}
-						});
-					}
+					  horizontalbar = holdingDate ?
+						// no holding: horizontal bar at bottom of graph
+						{rectangle: {xminOffset: "0px", xmaxOffset: "0px", yminOffset: "245px", ymaxOffset: "0px", color: "rgba(0, 0, 0, 0.5)"}} :
+						// holding: horizontal bar at top of graph
+						{rectangle: {xminOffset: "0px", xmaxOffset: "0px", yminOffset: "0px", ymaxOffset: "245px", color: "rgba(0, 0, 0, 0.5)"}}
 
+						prices.plot = $.jqplot('chart' + i.toString(), [lines[i], mLines[i], sLines[i]], {
+						  title: lines[i][0][3] + " <img src='chrome/site/" + lines[i][0][3].toLowerCase() + ".png'> " + lines[i][0][2], height: 360, highlighter: {show: true}, cursor: {show: true, zoom: true}, grid: {background: '#fff'},
+						  series: [{lineWidth: 0.5, color: '#ccc', markerOptions: {show: false}}, {yaxis: 'y2axis', lineWidth: 0.8, color: 'blue', markerOptions: {show: false}}, {yaxis: 'y2axis', lineWidth: 0.8, color: 'lightskyblue', markerOptions: {show: false}}],
+						  axes: {xaxis: {renderer: $.jqplot.DateAxisRenderer, tickOptions: {formatString: '%Y-%m-%d', showGridline: false}}, yaxis: {tickOptions: {formatString: "%.2f", showGridline: false}}, y2axis: {tickOptions: {formatString: "%.3f"}, tickInterval: 0.1, min: 0, max: 1}},
+						  // vertical line to display date of holding; variable holdingDate is used as boolean in the show-attribute
+						  canvasOverlay: {show: true, 
+							objects: [
+							  {verticalLine: {x: new $.jsDate(holdingDate).getTime(), lineWidth: 0.5, shadow: false}}, 
+							  horizontalbar]} 					
+						});
+						
 					// Text annotation for symbol and price
 					var arrow = (lines[i][0][1] < lines[i][1][1]) ? ' &#9660; ' : ' &#9650; ';
 					var change = (100 * (lines[i][0][1] - lines[i][1][1]) / lines[i][1][1]).toFixed(2) + '%';
