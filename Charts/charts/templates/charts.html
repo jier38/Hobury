@@ -76,12 +76,12 @@
 	<script type="text/javascript">
 		var nrofperiods = 24;
 		var prices = { plot: '' };
-		let weights = [], lines = [], mLines = [], sLines = [], iLines = [];
+		let weights = [], lines = [], mLines = [], sLines = [], iLines = [], pLines = [];
 
 		// Refreshes all charts on the page
 		function refresh() {
 			setWeights();
-			setIndicatorsDisplayLines();
+			setIndicators();
 
 			// Render weights chart
 			$('#weights_graph').empty();
@@ -107,23 +107,25 @@
 					let holding = holdings[lines[i][0][2]];
 					let holdingDate = holding && holding[0];
 
-					  horizontalbar = holdingDate ?
+					horizontalbar = holdingDate ?
 						// no holding: horizontal bar at bottom of graph
-						{rectangle: {xminOffset: "0px", xmaxOffset: "0px", yminOffset: "245px", ymaxOffset: "0px", color: "rgba(0, 0, 0, 0.5)"}} :
+						{ rectangle: { xminOffset: "0px", xmaxOffset: "0px", yminOffset: "245px", ymaxOffset: "0px", color: "rgba(0, 0, 0, 0.5)" } } :
 						// holding: horizontal bar at top of graph
-						{rectangle: {xminOffset: "0px", xmaxOffset: "0px", yminOffset: "0px", ymaxOffset: "245px", color: "rgba(0, 0, 0, 0.5)"}}
+						{ rectangle: { xminOffset: "0px", xmaxOffset: "0px", yminOffset: "0px", ymaxOffset: "245px", color: "rgba(0, 0, 0, 0.5)" } }
 
-						prices.plot = $.jqplot('chart' + i.toString(), [lines[i], mLines[i], sLines[i]], {
-						  title: lines[i][0][3] + " <img src='chrome/site/" + lines[i][0][3].toLowerCase() + ".png'> " + lines[i][0][2], height: 360, highlighter: {show: true}, cursor: {show: true, zoom: true}, grid: {background: '#fff'},
-						  series: [{lineWidth: 0.5, color: '#ccc', markerOptions: {show: false}}, {yaxis: 'y2axis', lineWidth: 0.8, color: 'blue', markerOptions: {show: false}}, {yaxis: 'y2axis', lineWidth: 0.8, color: 'lightskyblue', markerOptions: {show: false}}],
-						  axes: {xaxis: {renderer: $.jqplot.DateAxisRenderer, tickOptions: {formatString: '%Y-%m-%d', showGridline: false}}, yaxis: {tickOptions: {formatString: "%.2f", showGridline: false}}, y2axis: {tickOptions: {formatString: "%.3f"}, tickInterval: 0.1, min: 0, max: 1}},
-						  // vertical line to display date of holding; variable holdingDate is used as boolean in the show-attribute
-						  canvasOverlay: {show: true, 
+					prices.plot = $.jqplot('chart' + i.toString(), [pLines[i], mLines[i], sLines[i]], {
+						title: lines[i][0][3] + " <img src='chrome/site/" + lines[i][0][3].toLowerCase() + ".png'> " + lines[i][0][2], height: 360, highlighter: { show: true }, cursor: { show: true, zoom: true }, grid: { background: '#fff' },
+						series: [{ lineWidth: 0.5, color: '#ccc', markerOptions: { show: false } }, { yaxis: 'y2axis', lineWidth: 0.8, color: 'blue', markerOptions: { show: false } }, { yaxis: 'y2axis', lineWidth: 0.8, color: 'lightskyblue', markerOptions: { show: false } }],
+						axes: { xaxis: { renderer: $.jqplot.DateAxisRenderer, tickOptions: { formatString: '%Y-%m-%d', showGridline: false } }, yaxis: { tickOptions: { formatString: "%.2f", showGridline: false } }, y2axis: { tickOptions: { formatString: "%.3f" }, tickInterval: 0.1, min: 0, max: 1 } },
+						// vertical line to display date of holding; variable holdingDate is used as boolean in the show-attribute
+						canvasOverlay: {
+							show: true,
 							objects: [
-							  {verticalLine: {x: new $.jsDate(holdingDate).getTime(), lineWidth: 0.5, shadow: false}}, 
-							  horizontalbar]} 					
-						});
-						
+								{ verticalLine: { x: new $.jsDate(holdingDate).getTime(), lineWidth: 0.5, shadow: false } },
+								horizontalbar]
+						}
+					});
+
 					// Text annotation for symbol and price
 					var arrow = (lines[i][0][1] < lines[i][1][1]) ? ' &#9660; ' : ' &#9650; ';
 					var change = (100 * (lines[i][0][1] - lines[i][1][1]) / lines[i][1][1]).toFixed(2) + '%';
@@ -161,9 +163,11 @@
 			for (x in weights) weights[x][1] /= sumweight;
 		}
 
-		// Calculate indicator values & Create series for display into jqplot line charts
-		function setIndicatorsDisplayLines() {
+
+		// Calculate indicator values
+		function setIndicators() {
 			for (var i in lines) {
+				pLines[i] = [];
 				mLines[i] = [];
 				iLines[i] = [];
 				sLines[i] = [];
@@ -176,14 +180,13 @@
 						mHighIndex += weights[w][1] * lines[i][m + w][7];
 						mS += weights[w][1] * lines[i][m + w][8];
 					}
+					pLines[i].push([lines[i][m][0], lines[i][m][1]]);
+					mLines[i].push([lines[i][m][0], mUp / (mUp + mDown)]);
+					iLines[i].push([lines[i][m][0], mLowIndex / (mLowIndex + mHighIndex)]);
+					sLines[i].push([lines[i][m][0], mS]);
 					lines[i][m][9] = mUp / (mUp + mDown);
 					lines[i][m][10] = mLowIndex / (mLowIndex + mHighIndex);
 					lines[i][m][11] = mS;
-				}
-				for (var m in lines[i]) {
-					mLines[i].push([lines[i][m][0], lines[i][m][9]]);
-					iLines[i].push([lines[i][m][0], lines[i][m][10]]);
-					sLines[i].push([lines[i][m][0], lines[i][m][11]]);
 				}
 			}
 		}
