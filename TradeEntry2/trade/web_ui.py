@@ -34,7 +34,7 @@ class TradEntry(Component):
             cursor = self.env.db_query(
                          'SELECT id, portfolio, buysell, quantity, exchange, '
                          'symbol, cash, currency, tradedate, tradeid '
-                         'FROM trades ORDER BY id'
+                         'FROM invest_trades ORDER BY id'
                      )
             data['trades'] = [
                                  (
@@ -47,7 +47,7 @@ class TradEntry(Component):
         else:
             data = {}
             cursor = self.env.db_query(
-                         "SELECT value FROM parameters "
+                         "SELECT value FROM invest_parameters "
                          "WHERE type='tolerance' and metric='quantity' "
                          "LIMIT 1"
                      )
@@ -68,11 +68,11 @@ class TradEntry(Component):
                      )
             data['exchangeList'] = [(row[0], row[1]) for row in cursor]
             cursor = self.env.db_query(
-                "SELECT name FROM portfolios ORDER BY name")
+                "SELECT name FROM invest_portfolios ORDER BY name")
             data['portfolioList'] = [(row[0]) for row in cursor]
             cursor = self.env.db_query(
                          "SELECT exchange, symbol, name "
-                         "FROM components ORDER BY exchange, symbol"
+                         "FROM invest_components ORDER BY exchange, symbol"
                      )
             data['symbolList'] = [(row[0], row[1], row[2]) for row in cursor]
             data['tradedate'] = datetime.now().strftime('%Y-%m-%d')
@@ -107,9 +107,9 @@ class TradEntry(Component):
                 else:
                     sql = (
                               "SELECT IFNULL(avg(close),0)*(1+( "
-                              "SELECT avg(value) FROM parameters "
+                              "SELECT avg(value) FROM invest_parameters "
                               "WHERE type='tolerance' and metric='cash')) " 
-                              "FROM prices WHERE exchange=%s and symbol=%s "
+                              "FROM invest_prices WHERE exchange=%s and symbol=%s "
                               "and datediff(now(), date) < 10"
                           )
                     args = (exchange, symbol)
@@ -142,7 +142,7 @@ class TradEntry(Component):
                         )
                     else:
                         sql = (
-                                  "INSERT INTO trades "
+                                  "INSERT INTO invest_trades "
                                   "(portfolio,buysell,quantity,exchange,"
                                   "symbol,cash,currency,tradedate,tradeid) "
                                   "VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)"
