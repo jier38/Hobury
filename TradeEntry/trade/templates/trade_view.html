@@ -19,26 +19,20 @@
 		function callChange(exchange) {
 			var symbol = document.getElementById("components");
 			var str = '';
-			  # for metric, value in exchangeList      
-				if (exchange == '${value}') { 
+			currency_list = document.getElementById('currency');
+			  # for metric, currency in exchangeList      
+				if (exchange == '${metric}') { 
 				  # for exchange, symbol, name in symbolList
-					# if value in exchange:
+					# if metric in exchange:
 						str += '<option value="${symbol}">${name}</option>';
 					# endif
 				  # endfor
+				}	
+				if (exchange == '${metric}') {
+					currency_list.selectedIndex = currency_list.querySelector('option[value="${currency}"]').index;
 				}
 			  # endfor
 			symbol.innerHTML = str;
-			currency_list = document.getElementById('currency');
-			if (exchange == 'TW') {
-				currency_list.selectedIndex = currency_list.querySelector('option[value="TWD"]').index;
-			}
-			else if (exchange == 'UK') {
-				currency_list.selectedIndex = currency_list.querySelector('option[value="GBP"]').index;
-			}
-			else {
-				currency_list.selectedIndex = currency_list.querySelector('option[value="EUR"]').index;
-			}
 		}
 
 		$(function () {
@@ -84,9 +78,8 @@
 					<td>
 						<div class="col-md-2">
 							<select id="buysell" name="buysell" class="form-control">
-								# for metric, value in buysellList
-								<option value="${value}">${metric}</option>
-								# endfor
+								<option value="B">buy</option>
+								<option value="S">sale</option>
 							</select>
 						</div>
 					</td>
@@ -109,8 +102,8 @@
 							<select id="exchange" name="exchange" class="form-control"
 								onchange="callChange(this.value);" required="required">
 								<option value=''></option>
-								# for metric, value in exchangeList
-								<option value="${value}">${metric}</option>
+								# for metric, currency in exchangeList
+								<option value="${metric}">${metric}</option>
 								# endfor
 							</select>
 						</div>
@@ -143,8 +136,8 @@
 					<td>
 						<div class="col-md-2">
 							<select id="currency" name="currency" class="form-control">
-								# for metric, value in currencyList
-								<option value="${value}">${metric}</option>
+								# for metric in currencyList
+								<option value="${metric}">${metric}</option>
 								# endfor
 							</select>
 						</div>

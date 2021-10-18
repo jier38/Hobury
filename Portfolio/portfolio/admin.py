@@ -24,7 +24,7 @@ class PortfolioPanel(Component):
                 name = req.args.get('name').strip()
                 description = req.args.get('description').strip()
                 sql = (
-                          "INSERT INTO invest_portfolios "
+                          "INSERT INTO invest.portfolios "
                           "(name, description, createtime, user) "
                           "VALUES('{}','{}',now(),'{}')"
                       ).format(name, description, user)
@@ -34,7 +34,7 @@ class PortfolioPanel(Component):
                 sels = req.args.getlist('sels')
                 if sels is not None and len(sels) > 0:
                     for sel in sels:
-                        sql = 'DELETE FROM invest_portfolios WHERE id ={}'
+                        sql = 'DELETE FROM invest.portfolios WHERE id ={}'
                         sql = sql.format(int(sel))
                         self.env.db_transaction(sql)
                     add_notice(req, 'Portfolio has been deleted.')
@@ -43,7 +43,7 @@ class PortfolioPanel(Component):
                 name = req.args.get('name').strip()
                 description = req.args.get('description').strip()
                 sql = (
-                          "UPDATE invest_portfolios "
+                          "UPDATE invest.portfolios "
                           "SET name='{}', description='{}', "
                           "createtime=now(), user='{}' "
                           "WHERE id={}"
@@ -55,7 +55,7 @@ class PortfolioPanel(Component):
             if sel is not None:
                 sql = (
                           "SELECT id, name, description, createtime, user "
-                          "FROM invest_portfolios where id={}"
+                          "FROM invest.portfolios where id={}"
                       ).format(int(sel))
                 cursor = self.env.db_query(sql)
                 if len(cursor) > 0:
@@ -66,7 +66,7 @@ class PortfolioPanel(Component):
 
         cursor = self.env.db_query(
                      "SELECT id, name, description, createtime, user "
-                     "FROM invest_portfolios ORDER BY name"
+                     "FROM invest.portfolios ORDER BY name"
                  )
         data['portfolios'] = [
             (row[0], row[1], row[2], row[3], row[4]) for row in cursor]

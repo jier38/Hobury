@@ -3,6 +3,7 @@ from datetime import datetime
 from trac.core import *
 from trac.util.html import html
 from trac.web.api import IRequestHandler, HTTPNotFound
+from trac.perm import IPermissionRequestor
 from trac.web.chrome import (
                                 Chrome,
                                 INavigationContributor,
@@ -13,7 +14,15 @@ from trac.web.chrome import (
 
 class TradEntry(Component):
 
-    implements(IRequestHandler, INavigationContributor)
+    implements(
+        IRequestHandler,
+        INavigationContributor,
+        IPermissionRequestor
+    )
+
+    def get_permission_actions(self):
+        view = 'TRADES'
+        return [view]
 
     # INavigationContributor methods
 
@@ -21,7 +30,8 @@ class TradEntry(Component):
         return 'trade'
 
     def get_navigation_items(self, req):
-        yield ('mainnav', 'trade', html.a('Trade', href=req.href.trade()))
+        if 'TRADES' in req.perm:
+            yield ('mainnav', 'trade', html.a('Trade', href=req.href.trade()))
 
     # IRequstHandler methods
 
@@ -34,7 +44,7 @@ class TradEntry(Component):
             cursor = self.env.db_query(
                          'SELECT id, portfolio, buysell, quantity, exchange, '
                          'symbol, cash, currency, tradedate, tradeid '
-                         'FROM invest_trades ORDER BY id'
+                         'FROM invest.trades ORDER BY id'
                      )
             data['trades'] = [
                                  (
@@ -47,32 +57,25 @@ class TradEntry(Component):
         else:
             data = {}
             cursor = self.env.db_query(
-                         "SELECT value FROM invest_parameters "
+                         "SELECT value FROM invest.parameters "
                          "WHERE type='tolerance' and metric='quantity' "
                          "LIMIT 1"
                      )
             data['tolerance'] = [(row[0]) for row in cursor]
             cursor = self.env.db_query(
-                         "SELECT metric, value FROM codes "
-                         "WHERE type='buysell' ORDER BY metric"
+                         "SELECT distinct currency as metric from invest.exchanges order by currency"
                      )
-            data['buysellList'] = [(row[0], row[1]) for row in cursor]
+            data['currencyList'] = [(row[0]) for row in cursor]
             cursor = self.env.db_query(
-                         "SELECT metric, value FROM codes WHERE "
-                         "type='currency' ORDER BY metric"
-                     )
-            data['currencyList'] = [(row[0], row[1]) for row in cursor]
-            cursor = self.env.db_query(
-                         "SELECT metric, value FROM codes "
-                         "WHERE type='exchange' ORDER BY metric"
+                         "SELECT distinct exchange as metric, currency  from invest.exchanges order by exchange"
                      )
             data['exchangeList'] = [(row[0], row[1]) for row in cursor]
             cursor = self.env.db_query(
-                "SELECT name FROM invest_portfolios ORDER BY name")
+                "SELECT name FROM invest.portfolios ORDER BY name")
             data['portfolioList'] = [(row[0]) for row in cursor]
             cursor = self.env.db_query(
                          "SELECT exchange, symbol, name "
-                         "FROM invest_components ORDER BY exchange, symbol"
+                         "FROM invest.components ORDER BY exchange, symbol"
                      )
             data['symbolList'] = [(row[0], row[1], row[2]) for row in cursor]
             data['tradedate'] = datetime.now().strftime('%Y-%m-%d')
@@ -107,9 +110,9 @@ class TradEntry(Component):
                 else:
                     sql = (
                               "SELECT IFNULL(avg(close),0)*(1+( "
-                              "SELECT avg(value) FROM invest_parameters "
+                              "SELECT avg(value) FROM invest.parameters "
                               "WHERE type='tolerance' and metric='cash')) " 
-                              "FROM invest_prices WHERE exchange=%s and symbol=%s "
+                              "FROM invest.prices WHERE exchange=%s and symbol=%s "
                               "and datediff(now(), date) < 10"
                           )
                     args = (exchange, symbol)
@@ -142,13 +145,13 @@ class TradEntry(Component):
                         )
                     else:
                         sql = (
-                                  "INSERT INTO invest_trades "
+                                  "INSERT INTO invest.trades "
                                   "(portfolio,buysell,quantity,exchange,"
                                   "symbol,cash,currency,tradedate,tradeid) "
                                   "VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)"
                         )
                         args = (portfolio, buysell, quantity, exchange,
-                                symbol, cash, currency, tradedate, user)
+                                symbol, cash, currency, tradedate, req.authname)
                         self.env.db_transaction(sql, args)
                         add_notice(req, 'Your trade has been saved.')
             chrome = Chrome(self.env)
