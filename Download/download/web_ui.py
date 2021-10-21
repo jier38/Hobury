@@ -66,7 +66,7 @@ class Download(Component):
         if 'DOWNLOAD_VIEW' in req.perm('download'):
             yield (
                 'mainnav',
-                'ownload', 
+                'download', 
                 html.a('Download', href=req.href.download())
             )
 
