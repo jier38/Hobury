@@ -248,7 +248,7 @@ class Download(Component):
         else:
             # Get download.
             download_id = req.args.get('sel') or 0
-            if download_id > 0:
+            if int(download_id) > 0:
                 sql = 'SELECT file, description FROM download where id={}'
                 sql = sql.format(download_id)
                 cursor = self.env.db_query(sql)
