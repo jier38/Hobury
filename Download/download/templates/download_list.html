@@ -38,14 +38,11 @@
 		</div>
 	</form>
 	# endif
-	<table class="listing" id="downloadlist">
-		<thead>
+	<table class="wiki" id="downloadlist">
 			<tr>
-				<th>File</th>
-				<th>Description</th>
+				<th class="header">File</th>
+				<th class="header">Description</th>
 			</tr>
-		</thead>
-		<tbody>
 			# if not downloads:
 			<tr>
 				<td colspan="2">${_("No download data.")}</td>
@@ -61,7 +58,6 @@
 				</td>
 			</tr>
 			# endfor
-		</tbody>
 	</table>
 	<p class="help">
 	</p>

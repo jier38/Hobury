@@ -38,15 +38,12 @@
 	</form>
 	<form method="POST">
 		${jmacros.form_token_input()}
-		<table class="listing" id="downloadlist">
-			<thead>
+		<table class="wiki" id="downloadlist">
 				<tr>
-					<th class="sel">&nbsp;</th>
-					<th>File</th>
-					<th>Description</th>
+					<th class="sel header">&nbsp;</th>
+					<th class="header">File</th>
+					<th class="header">Description</th>
 				</tr>
-			</thead>
-			<tbody>
 				# if not downloads:
 				<tr>
 					<td colspan="3">${_("No download data.")}</td>
@@ -63,7 +60,6 @@
 					</td>
 				</tr>
 				# endfor
-			</tbody>
 		</table>
 		<div class="buttons">
 			<input type="submit" name="submit" value="Remove" />
