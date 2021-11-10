@@ -154,6 +154,8 @@
 
 	// Main function
 	$(document).ready(function() {
+	  // Sort prices array by exchange, symbol, then date in descending order
+	  prices_.sort((a, b) => (a[1].localeCompare(b[1]) || (a[2].localeCompare(b[2])) || (b[0].localeCompare(a[0]))));	
 	  // First order statistics: up, down, lowIndex, highIndex, low, high
 	  let r = 0;  // row index for prices array
 	  while (prices_[r+nrofperiods] !== undefined) {
