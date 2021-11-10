@@ -1,6 +1,6 @@
 // Define array of components that are associated with the prices; the index values are the same as in the array symbols
 // Data structure: name, index, sector
-var components = {};
+
 // FTSE 100
 components['index'] = ['index', '', 'index'];
 components['AAL'] = ['Anglo American', 'UK', 'Basic materials'];
@@ -506,9 +506,4 @@ components['RENE'] = ['REN', 'PT', 'Energy'];
 components['SEM'] = ['Semapa', 'PT', 'Basic materials'];
 components['SONAC'] = ['Sonae Capital', 'PT', 'Financial services'];
 components['YSO'] = ['Sonae', 'PT', 'Consumer goods'];
-
-// Naming aesthetics
-for(i in components) { components[i][0] = components[i][0].replace(/Grp/g, 'Group');}
-for(i in components) { components[i][0] = components[i][0].replace(/Intl/g, 'International');}
-for(i in components) { components[i][0] = components[i][0].replace(/Hldg/g, 'Holding');}
 
