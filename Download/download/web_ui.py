@@ -155,8 +155,8 @@ class Download(Component):
 
         # Add new download to DB.
         now = datetime.now()
-        sql = 'INSERT INTO download (year,file,description,size,time,author) VALUES(%d,%s,%s,%s,%s,%s)'
-        args = (now.year, download['file'], download['description'],
+        sql = 'INSERT INTO download (year,file,description,size,time,author) VALUES(year(curdate()),%s,%s,%s,%s,%s)'
+        args = (download['file'], download['description'],
                 download['size'], download['time'], download['author'])
         self.env.db_transaction(sql, args)
         self.log.debug("FileUpload SQL: %s", sql)
@@ -166,16 +166,17 @@ class Download(Component):
         self.log.debug('FileUpload id: %s', id)
 
         # Prepare file paths.
-        path = os.path.normpath(os.path.join(self.path,
-                                             to_unicode(year)))
+        path = os.path.normpath(os.path.join('/var/www/trac/download',str(now.year)))
         filepath = os.path.normpath(os.path.join(path, download['file']))
-
         self.log.debug('FileUpload path: %s', path)
         self.log.debug('FileUpload filepath: %s', filepath)
 
         # Store uploaded image.
-        try:
-            os.mkdir(path.encode('utf-8'))
+        try:            
+            if not os.path.isdir(path):
+                os.mkdir(path.encode('utf-8'))		
+            if os.path.exists(filepath):
+                remove(filepath)				
             with open(filepath.encode('utf-8'), 'wb+') as fileobj:
                 file.seek(0)
                 shutil.copyfileobj(file, fileobj)
