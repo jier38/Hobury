@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 import os
 import shutil
 import unicodedata
@@ -17,7 +17,6 @@ from trac.web import IRequestHandler
 from trac.perm import IPermissionRequestor
 from trac.web.chrome import (
     INavigationContributor,
-    ITemplateProvider,
     add_notice,
     add_warning
 )
@@ -32,7 +31,7 @@ from trac.util.text import to_unicode
 class Download(Component):
 
     implements(INavigationContributor, IRequestHandler,
-               IAdminPanelProvider, ITemplateProvider, IPermissionRequestor)
+               IAdminPanelProvider, IPermissionRequestor)
 
     path = PathOption(
                'download',
@@ -78,9 +77,9 @@ class Download(Component):
         data = {}
         self.do_action(req)
         cursor = self.env.db_query(
-                     'SELECT id, file, description FROM download ORDER BY id'
+                     'SELECT id, year, file, description FROM download ORDER BY id'
                  )
-        data['downloads'] = [(row[0], row[1], row[2]) for row in cursor]
+        data['downloads'] = [(row[0], row[1], row[2], row[3]) for row in cursor]
         return 'download_list.html', data, {}
 
     # IAdminPageProvider methods
@@ -93,26 +92,11 @@ class Download(Component):
         data = {}
         self.do_action(req)
         cursor = self.env.db_query(
-                     'SELECT id, file, description, size, time, author '
+                     'SELECT id, year, file, description, size, time, author '
                      'FROM download ORDER BY id'
                  )
-        data['downloads'] = [(row[0], row[1], row[2]) for row in cursor]
+        data['downloads'] = [(row[0], row[1], row[2], row[3]) for row in cursor]
         return 'download_admin.html', data, {}
-
-    # ITemplateProvider
-    def get_htdocs_dirs(self):
-        """Return the absolute path of a directory containing additional
-        static resources (such as images, style sheets, etc).
-        """
-        from pkg_resources import resource_filename
-        return [resource_filename(__name__, 'htdocs')]
-
-    def get_templates_dirs(self):
-        """Return the absolute path of the directory containing the provided
-        ClearSilver/Genshi templates.
-        """
-        from pkg_resources import resource_filename
-        return [resource_filename(__name__, 'templates')]
 
     # IPermissionRequestor methods.
     def get_permission_actions(self):
@@ -146,7 +130,7 @@ class Download(Component):
             size = file.file.tell()
             file.file.seek(0)
         if size == 0:
-            raise TracError('Can't upload empty file.')
+            raise TracError("Can't upload empty file.")
 
         # Try to normalize the filename to unicode NFC if we can.
         # Files uploaded from OS X might be in NFD.
@@ -170,9 +154,9 @@ class Download(Component):
             )
 
         # Add new download to DB.
-        sql = 'INSERT INTO download (file,description,size,time,author) '
-		      'VALUES(%s,%s,%s,%s,%s)'
-        args = (download['file'], download['description'],
+        now = datetime.now()
+        sql = 'INSERT INTO download (year,file,description,size,time,author) VALUES(%d,%s,%s,%s,%s,%s)'
+        args = (now.year, download['file'], download['description'],
                 download['size'], download['time'], download['author'])
         self.env.db_transaction(sql, args)
         self.log.debug("FileUpload SQL: %s", sql)
@@ -183,7 +167,7 @@ class Download(Component):
 
         # Prepare file paths.
         path = os.path.normpath(os.path.join(self.path,
-                                             to_unicode(id)))
+                                             to_unicode(year)))
         filepath = os.path.normpath(os.path.join(path, download['file']))
 
         self.log.debug('FileUpload path: %s', path)
@@ -221,7 +205,7 @@ class Download(Component):
                     'file': filename,
                     'description': req.args.get('description'),
                     'size': file_size,
-                    'time': to_timestamp(datetime.datetime.now(utc)),
+                    'time': to_timestamp(datetime.now(utc)),
                     'count': 0,
                     'author': req.authname
                 }
@@ -249,12 +233,13 @@ class Download(Component):
             # Get download.
             download_id = req.args.get('sel') or 0
             if int(download_id) > 0:
-                sql = 'SELECT file, description FROM download where id={}'
+                sql = 'SELECT file, description, year FROM download where id={}'
                 sql = sql.format(download_id)
                 cursor = self.env.db_query(sql)
                 if len(cursor) > 0:
                     fn = cursor[0][0]
                     description = cursor[0][1]
+                    year = cursor[0][2]
                 else:
                     raise TracError("File not found.")
 
@@ -262,13 +247,13 @@ class Download(Component):
                 filename = os.path.basename(fn)
                 filepath = os.path.join(
                                self.path,
-                               to_unicode(download_id),
+                               to_unicode(year),
                                filename
                            )
                 filepath = os.path.normpath(filepath)
 
                 # Increase downloads count.
-				sql = 'UPDATE download SET count=count+1 WHERE id ={}'
+                sql = 'UPDATE download SET count=count+1 WHERE id ={}'
                 sql = sql.format(download_id)
                 self.env.db_transaction(sql)
 
