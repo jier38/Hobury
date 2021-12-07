@@ -25,9 +25,11 @@
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.highlighter.min.js"></script>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.cursor.min.js"></script>
 	<link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/jquery.jqplot.min.css" />
+	<script type="text/javascript" src="chrome/site/prefix.js"></script>
 	<script type="text/javascript" src="chrome/site/components.js"></script>
 	<script type="text/javascript" src="chrome/site/holdings.js"></script>
 	<script type="text/javascript" src="chrome/site/prices.js"></script>
+	<script type="text/javascript" src="chrome/site/suffix.js"></script>	
 
 	<table>
 	<tr><td><div class="tooltip">Position size: </div></td><td><input id="position_size" type="number" value="2000" min="0" step="100" onchange="refresh();" /></td></tr>
@@ -98,12 +100,12 @@
 					var priceAnnotation = '<div style="position: absolute;  display: inline-block; left: 70px; top: 25px;">';
 					priceAnnotation += "<p><b>Name</b>: " + components[lines[i][0][2]][0] + "</p>";
 					priceAnnotation += "<p><b>Sector</b>: " + components[lines[i][0][2]][2] + "</p>";
-					priceAnnotation += "<p><b>Price</b>: " + (lines[i][0][1] + arrow + change) + "</p>";
-					priceAnnotation += "<p><b>mRS</b>: " + Number.parseFloat(lines[i][0][9]).toFixed(2) + "</p>";
+					priceAnnotation += "<p><b>Price</b>: " + (lines[i][0][3] + arrow + change) + "</p>";
+					priceAnnotation += "<p><b>mRS</b>: " + Number.parseFloat(mLines[i][0][1]).toFixed(2) + "</p>";
 					if (holdingDate) {
 						priceAnnotation += "<p><b>Quantity</b>: " + holding[1] + "</p></div>";
 					} else {
-						priceAnnotation += "<p><b>Quantity</b>: " + Number.parseFloat(document.getElementById("position_size").value / lines[i][0][1]).toFixed(0) + "</p></div>";
+						priceAnnotation += "<p><b>Quantity</b>: " + Number.parseFloat(document.getElementById("position_size").value / lines[i][0][3]).toFixed(0) + "</p></div>";
 					}
 					$(priceAnnotation).insertAfter(canvas_selector);
 		}
