@@ -27,7 +27,6 @@
 	<link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/jquery.jqplot.min.css" />
 	<script type="text/javascript" src="chrome/site/prefix.js"></script>
 	<script type="text/javascript" src="chrome/site/components.js"></script>
-	<script type="text/javascript" src="chrome/site/holdings.js"></script>
 	<script type="text/javascript" src="chrome/site/prices.js"></script>
 	<script type="text/javascript" src="chrome/site/suffix.js"></script>	
 
@@ -45,6 +44,12 @@
 	var nrofperiods = 24;
 	var prices = {plot: ''};
 	let weights = [], lines = [], pLines = [], mLines = [], sLines = [], iLines = [];
+
+    //Holding data
+    var holdings = {};
+    # for symbol, date, quantity in holdings   
+        holdings['${symbol}'] = ['${date}', '${quantity}', 'trading'];
+    # endfor
 
 	// Refreshes all charts on the page
 	function refresh() {

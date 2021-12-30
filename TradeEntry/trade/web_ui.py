@@ -42,15 +42,13 @@ class TradEntry(Component):
         if req.path_info.find('/trade/list') == 0:
             data = {}
             cursor = self.env.db_query(
-                         'SELECT id, portfolio, buysell, quantity, exchange, '
-                         'symbol, cash, currency, tradedate, tradeid '
-                         'FROM invest.trades ORDER BY id'
-                     )
+				"SELECT exchange, symbol, sum(quantity * case when type = 'Verkoop' then -1 when type = 'Koop' then 1 end) as quantity_ " 
+                "from invest.trades group by exchange, symbol "
+                "having sum(quantity * case when type = 'Verkoop' then -1 when type = 'Koop' then 1 end) <> 0 order by exchange, symbol"
+			)
             data['trades'] = [
                                  (
-                                     row[0], row[1], row[2], row[3],
-                                     row[4], row[5], row[6], row[7],
-                                     row[8], row[9]
+                                     row[0], row[1], row[2]
 						         ) for row in cursor
 							 ]
             return 'trade_list.html', data, {}
@@ -65,6 +63,7 @@ class TradEntry(Component):
             cursor = self.env.db_query(
                          "SELECT distinct currency as metric from invest.exchanges order by currency"
                      )
+            data['currency'] = "EUR"
             data['currencyList'] = [(row[0]) for row in cursor]
             cursor = self.env.db_query(
                          "SELECT distinct exchange as metric, currency  from invest.exchanges order by exchange"
@@ -78,17 +77,18 @@ class TradEntry(Component):
                          "FROM invest.components ORDER BY exchange, symbol"
                      )
             data['symbolList'] = [(row[0], row[1], row[2]) for row in cursor]
-            data['tradedate'] = datetime.now().strftime('%Y-%m-%d')
+            data['date'] = datetime.now().strftime('%Y-%m-%d')
             if req.method == 'POST':
                 portfolio = req.args.get('portfolio').strip()
-                buysell = req.args.get('buysell').strip()
+                type = req.args.get('type').strip()
                 quantity = req.args.get('quantity').strip()
                 exchange = req.args.get('exchange').strip()
                 cash = req.args.get('cash').strip()
                 currency = req.args.get('currency').strip()
                 temp = req.args.get('symbol').strip()
-                tradedate = req.args.get('tradedate').strip()
+                date = req.args.get('date').strip()
                 symbol = ''
+                entireholding = req.args.get('entireholding')		
                 for row in cursor:
                     if row[0] == exchange:
                         if row[1] == temp:
@@ -99,13 +99,13 @@ class TradEntry(Component):
                             break
                 if symbol == '':
                     data['portfolio'] = portfolio
-                    data['buysell'] = buysell
+                    data['type'] = type
                     data['quantity'] = quantity
                     data['exchange'] = exchange
                     data['currency'] = currency
                     data['cash'] = cash
                     data['symbol'] = temp
-                    data['tradedate'] = tradedate
+                    data['date'] = date
                     add_warning(req, 'Please enter valid symbol or name.')
                 else:
                     sql = (
@@ -118,26 +118,40 @@ class TradEntry(Component):
                     args = (exchange, symbol)
                     cursor = self.env.db_query(sql, args)
                     data['price'] = [(row[0]) for row in cursor]
-                    if float(data['price'][0]) <= 0:
+                    if type.lower() == 'verkoop' and entireholding == 'on':
+                        sql = (
+					             "SELECT exchange, symbol, sum(quantity * case when type = 'Verkoop' then -1 else 1 end) as quantity "
+                                 "FROM invest.trades WHERE exchange=%s and symbol= %s and type in ('Koop', 'Verkoop') "
+                                 "GROUP BY exchange, symbol"
+                              )
+                        args = (exchange, symbol)
+                        cursor = self.env.db_query(sql, args)
+                        data['holding'] = [(row[2]) for row in cursor]
+                        quantity = data['holding'][0]
+                    if int(quantity) <= 0:
+                        if entireholding == 'on':
+                            add_warning(req, 'No holding in this symbol.')
+                        else:
+                            add_warning(req, 'Enter the quantity bought or sold.')						
+                    elif float(data['price'][0]) <= 0:
                         data['portfolio'] = portfolio
-                        data['buysell'] = buysell
+                        data['type'] = type
                         data['quantity'] = quantity
                         data['exchange'] = exchange
                         data['currency'] = currency
                         data['cash'] = cash
                         data['symbol'] = temp
-                        data['tradedate'] = tradedate
-                        add_warning(
-                            req, 'The security is no longer tradeable.')
+                        data['date'] = date
+                        add_warning(req, 'The security is no longer tradeable.')
                     elif float(cash)/int(quantity) > float(data['price'][0]):
                         data['portfolio'] = portfolio
-                        data['buysell'] = buysell
+                        data['type'] = type
                         data['quantity'] = quantity
                         data['exchange'] = exchange
                         data['currency'] = currency
                         data['cash'] = cash
                         data['symbol'] = temp
-                        data['tradedate'] = tradedate
+                        data['date'] = date
                         add_warning(
                             req,
                             'The cash/quantity exceeds the price tolerance '
@@ -146,12 +160,11 @@ class TradEntry(Component):
                     else:
                         sql = (
                                   "INSERT INTO invest.trades "
-                                  "(portfolio,buysell,quantity,exchange,"
-                                  "symbol,cash,currency,tradedate,tradeid) "
-                                  "VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-                        )
-                        args = (portfolio, buysell, quantity, exchange,
-                                symbol, cash, currency, tradedate, req.authname)
+                                  "(portfolio,type,quantity,exchange,"
+                                  "symbol,cash,currency,date,description) "
+                                  "VALUES(%s,%s,%s,%s,%s,%s,%s,%s,(select name from invest.components where exchange = %s and symbol =%s))"
+                              )
+                        args = (portfolio.lower(), type, quantity, exchange, symbol, cash, currency, date, exchange, symbol)
                         self.env.db_transaction(sql, args)
                         add_notice(req, 'Your trade has been saved.')
             chrome = Chrome(self.env)

@@ -23,15 +23,9 @@
 		<table class="listing">
 			<thead>
 				<tr>
-					<th>${_("id")}</th>
-					<th>${_("portfolio")}</th>
-					<th>${_("buysell")}</th>
-					<th>${_("quantity")}</th>
 					<th>${_("exchange")}</th>
 					<th>${_("symbol")}</th>
-					<th>${_("cash")}</th>
-					<th>${_("currency")}</th>
-					<th>${_("tradedate")}</th>
+					<th>${_("quantity_")}</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -40,17 +34,11 @@
 					<td colspan="9">${_("No trades data.")}</td>
 				</tr>
 				# endif
-				# for id, portfolio ,buysell, quantity, exchange, symbol, cash, currency, tradedate, tradeid in trades
+				# for exchange, symbol ,quantity_ in trades
 				<tr>
-					<td>${id}</td>
-					<td>${portfolio}</td>
-					<td>${buysell}</td>
-					<td>${quantity}</td>
 					<td>${exchange}</td>
 					<td>${symbol}</td>
-					<td>${cash}</td>
-					<td>${currency}</td>
-					<td>${tradedate}</td>
+					<td>${quantity_}</td>
 				</tr>
 				# endfor
 			</tbody>
