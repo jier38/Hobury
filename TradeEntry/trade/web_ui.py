@@ -42,13 +42,15 @@ class TradEntry(Component):
         if req.path_info.find('/trade/list') == 0:
             data = {}
             cursor = self.env.db_query(
-				"SELECT exchange, symbol, sum(quantity * case when type = 'Verkoop' then -1 when type = 'Koop' then 1 end) as quantity_ " 
-                "from invest.trades group by exchange, symbol "
-                "having sum(quantity * case when type = 'Verkoop' then -1 when type = 'Koop' then 1 end) <> 0 order by exchange, symbol"
+				"SELECT max(t.date), t.exchange, t.symbol, tt.quantity from invest.trades t inner join "
+				"(SELECT exchange, symbol, sum(quantity * case when type = 'Verkoop' then -1 else 1 end) as quantity "
+				"from invest.trades where type in ('Koop', 'Verkoop') "
+				"group by exchange, symbol having quantity > 0) tt on t.exchange = tt.exchange and t.symbol = tt.symbol "
+                "where type = 'Koop' group by t.exchange, t.symbol;"
 			)
             data['trades'] = [
                                  (
-                                     row[0], row[1], row[2]
+                                     row[0], row[1], row[2], row[3]
 						         ) for row in cursor
 							 ]
             return 'trade_list.html', data, {}

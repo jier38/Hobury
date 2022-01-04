@@ -20,28 +20,26 @@
 	<h2>Trades</h2>
 	<fieldset>
 		<legend>${_("Trade list")}</legend>
-		<table class="listing">
-			<thead>
+		<table class="wiki">
 				<tr>
+                    <th>${_("date")}</th>
 					<th>${_("exchange")}</th>
 					<th>${_("symbol")}</th>
-					<th>${_("quantity_")}</th>
+					<th>${_("quantity")}</th>
 				</tr>
-			</thead>
-			<tbody>
 				# if not trades:
 				<tr>
-					<td colspan="9">${_("No trades data.")}</td>
+					<td colspan="4">${_("No trades data.")}</td>
 				</tr>
 				# endif
-				# for exchange, symbol ,quantity_ in trades
+				# for date, exchange, symbol ,quantity_ in trades
 				<tr>
+                    <td>${date}</td>
 					<td>${exchange}</td>
 					<td>${symbol}</td>
 					<td>${quantity_}</td>
 				</tr>
 				# endfor
-			</tbody>
 		</table>
 	</fieldset>
 	# endblock content
