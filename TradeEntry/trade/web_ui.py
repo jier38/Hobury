@@ -42,15 +42,15 @@ class TradEntry(Component):
         if req.path_info.find('/trade/list') == 0:
             data = {}
             cursor = self.env.db_query(
-				"SELECT max(t.date), t.exchange, t.symbol, tt.quantity from invest.trades t inner join "
-				"(SELECT exchange, symbol, sum(quantity * case when type = 'Verkoop' then -1 else 1 end) as quantity "
-				"from invest.trades where type in ('Koop', 'Verkoop') "
-				"group by exchange, symbol having quantity > 0) tt on t.exchange = tt.exchange and t.symbol = tt.symbol "
-                "where type = 'Koop' group by t.exchange, t.symbol;"
+				"SELECT max(t.date) as date, t.portfolio, t.exchange, t.symbol, c.name, tt.quantity "
+                "from (invest.trades t inner join (select portfolio, exchange, symbol, sum(quantity * case when type = 'Verkoop' then -1 "
+				"else 1 end) as quantity from invest.trades where type in ('Koop', 'Verkoop') group by portfolio, exchange, symbol having ""quantity > 0) tt on t.portfolio = tt.portfolio and t.exchange = tt.exchange and t.symbol = tt.symbol) "
+				"left join invest.components c on t.exchange = c.exchange and t.symbol = c.symbol "
+                "where type = 'Koop' group by t.portfolio, t.exchange, t.symbol, c.name"
 			)
             data['trades'] = [
                                  (
-                                     row[0], row[1], row[2], row[3]
+                                     row[0], row[1], row[2], row[3], row[4], row[5]
 						         ) for row in cursor
 							 ]
             return 'trade_list.html', data, {}
@@ -120,6 +120,15 @@ class TradEntry(Component):
                     args = (exchange, symbol)
                     cursor = self.env.db_query(sql, args)
                     data['price'] = [(row[0]) for row in cursor]
+                    sql = (
+                              "SELECT sum(quantity * case when type = 'Verkoop' then -1 else 1 end) as quantity "
+                              "from invest.trades " 
+                              "where exchange = %s and symbol = %s and portfolio = %s and type in ('Koop', 'Verkoop') " 
+                              "group by exchange, symbol, portfolio"
+                          )
+                    args = (exchange, symbol, portfolio)
+                    cursor = self.env.db_query(sql, args)
+                    holding = [(row[0]) for row in cursor]		
                     if type.lower() == 'verkoop' and entireholding == 'on':
                         sql = (
 					             "SELECT exchange, symbol, sum(quantity * case when type = 'Verkoop' then -1 else 1 end) as quantity "
@@ -130,11 +139,15 @@ class TradEntry(Component):
                         cursor = self.env.db_query(sql, args)
                         data['holding'] = [(row[2]) for row in cursor]
                         quantity = data['holding'][0]
-                    if int(quantity) <= 0:
+                    if (type.lower()=='verkoop') and (len(holding)<=0 or int(holding[0])<=0):
+                        add_warning(req, 'There is no holding of that symbol in this portfolio.')		
+                    elif int(quantity) <= 0:
                         if entireholding == 'on':
                             add_warning(req, 'No holding in this symbol.')
                         else:
-                            add_warning(req, 'Enter the quantity bought or sold.')						
+                            add_warning(req, 'Enter the quantity bought or sold.')	
+                    elif type.lower() == 'verkoop' and int(quantity) > int(holding[0]):				
+                        add_warning(req, 'Cannot sell more than is being held.')
                     elif float(data['price'][0]) <= 0:
                         data['portfolio'] = portfolio
                         data['type'] = type
