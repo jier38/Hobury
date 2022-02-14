@@ -4,45 +4,45 @@
 # include "macros.html" ignore missing
 
 <head>
-	<title>
-		# block title
-		${_("Trade")}
-		${ super() }
-		# endblock title
-	</title>
-	# block head
-	${ super() }
-	# endblock head
+  <title>
+    # block title
+    ${_("Trade")}
+    ${ super() }
+    # endblock title
+  </title>
+  # block head
+  ${ super() }
+  # endblock head
 </head>
 
 <body>
-	# block content
-	<h2>Trades</h2>
-	<fieldset>
-		<legend>${_("Trade list")}</legend>
-		<table class="wiki">
-				<tr>
-                    <th>${_("date")}</th>
-					<th>${_("exchange")}</th>
-					<th>${_("symbol")}</th>
-					<th>${_("quantity")}</th>
-				</tr>
-				# if not trades:
-				<tr>
-					<td colspan="4">${_("No trades data.")}</td>
-				</tr>
-				# endif
-				# for date, exchange, symbol ,quantity_ in trades
-				<tr>
-                    <td>${date}</td>
-					<td>${exchange}</td>
-					<td>${symbol}</td>
-					<td>${quantity_}</td>
-				</tr>
-				# endfor
-		</table>
-	</fieldset>
-	# endblock content
+  # block content
+  <h2>Trades</h2>
+  <fieldset>
+    <legend>${_("Trade list")}</legend>
+    <table class="wiki">
+        <tr>
+          <th>${_("date")}</th>
+          <th>${_("exchange")}</th>
+          <th>${_("symbol")}</th>
+          <th>${_("quantity")}</th>
+        </tr>
+        # if not trades:
+        <tr>
+          <td colspan="4">${_("No trades data.")}</td>
+        </tr>
+        # endif
+        # for date, exchange, symbol ,quantity_ in trades
+        <tr>
+          <td>${date}</td>
+          <td>${exchange}</td>
+          <td>${symbol}</td>
+          <td>${quantity_}</td>
+        </tr>
+        # endfor
+    </table>
+  </fieldset>
+  # endblock content
 </body>
 
 </html>
