@@ -37,14 +37,14 @@ class Download(Component):
                'download',
                'path',
                '../download',
-               doc='Path where to store uploaded downloads.'
+               doc = 'Path where to store uploaded downloads.'
            )
 
     ext = ListOption(
               'download',
               'ext',
               'zip,gz,bz2,rar',
-              doc="List of file extensions allowed to upload. Set to 'all'"
+              doc = "List of file extensions allowed to upload. Set to 'all'"
                   "to specify that any file extensions is allowed."
           )
 
@@ -108,7 +108,7 @@ class Download(Component):
     def get_download_id_by_time(self, time):
         cursor = self.env.db_query(
                      'SELECT id, file, description, size, time, author '
-                     'FROM download where time={}'.format(time)
+                     'FROM download where time = {}'.format(time)
                  )
         for row in cursor:
             return row[0]
@@ -155,7 +155,7 @@ class Download(Component):
 
         # Add new download to DB.
         now = datetime.now()
-        sql = 'INSERT INTO download (year,file,description,size,time,author) VALUES(year(curdate()),%s,%s,%s,%s,%s)'
+        sql = 'INSERT INTO download (year, file, description, size, time, author) VALUES (year(curdate()), %s, %s, %s, %s, %s)'
         args = (download['file'], download['description'],
                 download['size'], download['time'], download['author'])
         self.env.db_transaction(sql, args)
@@ -166,7 +166,7 @@ class Download(Component):
         self.log.debug('FileUpload id: %s', id)
 
         # Prepare file paths.
-        path = os.path.normpath(os.path.join('/var/www/trac/download',str(now.year)))
+        path = os.path.normpath(os.path.join('/var/www/trac/download', str(now.year)))
         filepath = os.path.normpath(os.path.join(path, download['file']))
         self.log.debug('FileUpload path: %s', path)
         self.log.debug('FileUpload filepath: %s', filepath)
@@ -174,9 +174,9 @@ class Download(Component):
         # Store uploaded image.
         try:            
             if not os.path.isdir(path):
-                os.mkdir(path.encode('utf-8'))		
+                os.mkdir(path.encode('utf-8'))
             if os.path.exists(filepath):
-                remove(filepath)				
+                remove(filepath)
             with open(filepath.encode('utf-8'), 'wb+') as fileobj:
                 file.seek(0)
                 shutil.copyfileobj(file, fileobj)
@@ -226,7 +226,7 @@ class Download(Component):
                 ids = req.args.getlist('sels')
                 if ids is not None and len(ids) > 0:
                     for id in ids:
-                        sql = "DELETE FROM download WHERE id ={}".format(
+                        sql = "DELETE FROM download WHERE id = {}".format(
                             int(id))
                         self.env.db_transaction(sql)
                     add_notice(req, 'Download has been deleted.')
@@ -234,7 +234,7 @@ class Download(Component):
             # Get download.
             download_id = req.args.get('sel') or 0
             if int(download_id) > 0:
-                sql = 'SELECT file, description, year FROM download where id={}'
+                sql = 'SELECT file, description, year FROM download where id = {}'
                 sql = sql.format(download_id)
                 cursor = self.env.db_query(sql)
                 if len(cursor) > 0:
@@ -254,7 +254,7 @@ class Download(Component):
                 filepath = os.path.normpath(filepath)
 
                 # Increase downloads count.
-                sql = 'UPDATE download SET count=count+1 WHERE id ={}'
+                sql = 'UPDATE download SET count = count+1 WHERE id = {}'
                 sql = sql.format(download_id)
                 self.env.db_transaction(sql)
 
@@ -272,7 +272,7 @@ class Download(Component):
                 # Return uploaded file to request.
                 req.send_header(
                     'Content-Disposition',
-                    'attachment;filename="%s"' % os.path.normpath(fn)
+                    'attachment;filename = "%s"' % os.path.normpath(fn)
                 )
                 req.send_header('Content-Description', description)
                 req.send_file(filepath.encode('utf-8'), mime_type)
