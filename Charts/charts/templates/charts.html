@@ -3,47 +3,47 @@
 <html>
 
 <head>
-	<title>
-		# block title
-		${_("Line chart")}
-		${ super() }
-		# endblock title
-	</title>
-	# block head
-	${ super() }
-	# endblock head
+  <title>
+    # block title
+    ${_("Line chart")}
+    ${ super() }
+    # endblock title
+  </title>
+  # block head
+  ${ super() }
+  # endblock head
 </head>
 
 <body>
-	# block content
-	<script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/jquery.jqplot.min.js"></script>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.canvasTextRenderer.min.js"></script>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.canvasAxisLabelRenderer.min.js"></script>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.canvasOverlay.min.js"></script>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.dateAxisRenderer.min.js"></script>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.highlighter.min.js"></script>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.cursor.min.js"></script>
-	<link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/jquery.jqplot.min.css" />
-	<script type="text/javascript" src="chrome/site/prefix.js"></script>
-	<script type="text/javascript" src="chrome/site/components.js"></script>
-	<script type="text/javascript" src="chrome/site/prices.js"></script>
-	<script type="text/javascript" src="chrome/site/suffix.js"></script>	
+  # block content
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/jquery.jqplot.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.canvasTextRenderer.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.canvasAxisLabelRenderer.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.canvasOverlay.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.dateAxisRenderer.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.highlighter.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.cursor.min.js"></script>
+  <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/jquery.jqplot.min.css" />
+  <script type="text/javascript" src="chrome/site/prefix.js"></script>
+  <script type="text/javascript" src="chrome/site/components.js"></script>
+  <script type="text/javascript" src="chrome/site/prices.js"></script>
+  <script type="text/javascript" src="chrome/site/suffix.js"></script>
 
-	<table>
-	<tr><td><div class="tooltip">Position size: </div></td><td><input id="position_size" type="number" value="2000" min="0" step="100" onchange="refresh();" /></td></tr>
-	<tr><td><div class="tooltip">mRS threshold: </div></td><td><input id="mRS_threshold" type="number" value="0.35" min="0" max="1" step="0.05" onchange="refresh();" /></td></tr>
-	<tr><td><div class="tooltip">Price threshold: </div></td><td><input id="p_threshold" type="number" value="30" min="0" step="1" onchange="refresh();" /></td></tr>
-	<tr><td><div class="tooltip">Shape parameter: </div></td><td><input id="k" type="number" value="1.7" min="0" max="10" step="0.05" onchange="refresh();" /></td></tr>
-	<tr><td><div class="tooltip">Scale parameter: </div></td><td><input id="lambda" type="number" value="7" min="0" max="20" step="0.1" onchange="refresh();" /></td></tr>
-	</table>
-	<div id="weights_graph" style="width: 500px; height: 200px; margin-top: 20px;"></div>
-	<div id="prices_graph" style="padding: 40px"></div>
+  <table>
+  <tr><td><div class="tooltip">Position size: </div></td><td><input id="position_size" type="number" value="2000" min="0" step="100" onchange="refresh();" /></td></tr>
+  <tr><td><div class="tooltip">mRS threshold: </div></td><td><input id="mRS_threshold" type="number" value="0.35" min="0" max="1" step="0.05" onchange="refresh();" /></td></tr>
+  <tr><td><div class="tooltip">Price threshold: </div></td><td><input id="p_threshold" type="number" value="50" min="0" step="1" onchange="refresh();" /></td></tr>
+  <tr><td><div class="tooltip">Shape parameter: </div></td><td><input id="k" type="number" value="1.7" min="0" max="10" step="0.05" onchange="refresh();" /></td></tr>
+  <tr><td><div class="tooltip">Scale parameter: </div></td><td><input id="lambda" type="number" value="7" min="0" max="20" step="0.1" onchange="refresh();" /></td></tr>
+  </table>
+  <div id="weights_graph" style="width: 500px; height: 200px; margin-top: 20px;"></div>
+  <div id="prices_graph" style="padding: 40px"></div>
 
-	<script type="text/javascript">
-	var nrofperiods = 24;
-	var prices = {plot: ''};
-	let weights = [], lines = [], pLines = [], mLines = [], sLines = [], iLines = [];
+  <script type="text/javascript">
+  var nrofperiods = 24;
+  var prices = {plot: ''};
+  let weights = [], lines = [], pLines = [], mLines = [], sLines = [], iLines = [];
 
     //Holding data
     var holdings = {};
@@ -51,148 +51,148 @@
         holdings['${symbol}'] = ['${date}', '${quantity}', 'trading'];
     # endfor
 
-	// Refreshes all charts on the page
-	function refresh() {
-	  setWeights();
-	  setIndicators();
+  // Refreshes all charts on the page
+  function refresh() {
+    setWeights();
+    setIndicators();
 
-	  // Render weights graph
-	  $('#weights_graph').empty();
-	  $.jqplot('weights_graph', [weights], {
-		highlighter: {show: true}, grid: {background: '#fff'},
-		series: [{lineWidth: 1, color: 'navy', showMarker: false, rendererOptions: {smooth: true}}], 
-		axes: {xaxis: {padMin: 0, tickOptions: {formatString: '%.1f'}}, yaxis: {padMin: 0, tickOptions: {formatString: '%.4f'}}}}
-	  );
+    // Render weights graph
+    $('#weights_graph').empty();
+    $.jqplot('weights_graph', [weights], {
+    highlighter: {show: true}, grid: {background: '#fff'},
+    series: [{lineWidth: 1, color: 'navy', showMarker: false, rendererOptions: {smooth: true}}], 
+    axes: {xaxis: {padMin: 0, tickOptions: {formatString: '%.1f'}}, yaxis: {padMin: 0, tickOptions: {formatString: '%.4f'}}}}
+    );
 
-	  // Render prices graphs
-	  $('#prices_graph').empty();
-	  let fragment = document.createDocumentFragment();
-	  var i = 0;
-	  while (lines[i] !== undefined) {
-		// only show graphs where the mRS is below the threshold and the price is above the threshold, but always show where there is a holding
-		if ((mLines[i][0][1] < document.getElementById("mRS_threshold").value && lines[i][0][3] > document.getElementById("p_threshold").value) || holdings[lines[i][0][2]]) {
-		  var element = document.createElement('div');
-		  element.id = 'chart' + i.toString();
-		  element.style.cssText = 'margin-bottom: 40px';
-		  document.getElementById("prices_graph").appendChild(element);
+    // Render prices graphs
+    $('#prices_graph').empty();
+    let fragment = document.createDocumentFragment();
+    var i = 0;
+    while (lines[i] !== undefined) {
+    // only show graphs where the mRS is below the threshold and the price is above the threshold, but always show where there is a holding
+    if ((mLines[i][0][1] < document.getElementById("mRS_threshold").value && lines[i][0][3] > document.getElementById("p_threshold").value) || holdings[lines[i][0][2]]) {
+      var element = document.createElement('div');
+      element.id = 'chart' + i.toString();
+      element.style.cssText = 'margin-bottom: 40px';
+      document.getElementById("prices_graph").appendChild(element);
 
-		  let holding = holdings[lines[i][0][2]];
-		  let holdingDate = holding && holding[0];
+      let holding = holdings[lines[i][0][2]];
+      let holdingDate = holding && holding[0];
 
-		  horizontalbar = holdingDate ?
-			/* holding: horizontal bar at top of graph */       {rectangle: {xminOffset: "0px", xmaxOffset: "0px", yminOffset: "255px", ymaxOffset: "0px", color: "rgba(99, 99, 99, 0.1)"}} :
-			/* no holding: horizontal bar at bottom of graph */ {rectangle: {xminOffset: "0px", xmaxOffset: "0px", yminOffset: "0px", ymaxOffset: "155px", color: "rgba(99, 99, 99, 0.1)"}};
+      horizontalbar = holdingDate ?
+      /* holding: horizontal bar at top of graph */       {rectangle: {xminOffset: "0px", xmaxOffset: "0px", yminOffset: "255px", ymaxOffset: "0px", color: "rgba(99, 99, 99, 0.1)"}} :
+      /* no holding: horizontal bar at bottom of graph */ {rectangle: {xminOffset: "0px", xmaxOffset: "0px", yminOffset: "0px", ymaxOffset: "155px", color: "rgba(99, 99, 99, 0.1)"}};
 
-		  prices.plot = $.jqplot('chart' + i.toString(), [pLines[i], mLines[i], sLines[i]], {
-			title: lines[i][0][1] + " <img src='chrome/site/" + lines[i][0][1].toLowerCase() + ".png'> " + lines[i][0][2], height: 360, highlighter: {show: true}, cursor: {show: true, zoom: true}, grid: {background: '#fff'},
-			series: [
-			  {lineWidth: 0.5, color: '#ccc', markerOptions: {show: false}},  // pLines (prices)
-			  {yaxis: 'y2axis', lineWidth: 0.8, color: 'blue', markerOptions: {show: false}, rendererOptions: {smooth: true}},  // mLines (mRS)
-			  {yaxis: 'y2axis', lineWidth: 0.8, color: 'lightskyblue', markerOptions: {show: false}, rendererOptions: {smooth: true}}  // sLines (mS)
-			],
-			axes: {
-			  xaxis: {renderer: $.jqplot.DateAxisRenderer, tickOptions: {formatString: '%Y-%m-%d', showGridline: false}}, 
-			  yaxis: {tickOptions: {formatString: "%.2f", showGridline: false}},  // pLines (prices)
-			  y2axis: {tickOptions: {formatString: "%.3f"}, tickInterval: 0.1, min: 0, max: 1}  // mLines (mRS) and sLines (mS)
-			},
-			// vertical line to display date of holding; variable holdingDate is used as boolean in the show-attribute
-			canvasOverlay: {show: holdingDate, objects: [{verticalLine: {x: new $.jsDate(holdingDate).getTime(), lineWidth: 0.5, shadow: false}}, horizontalbar]} 
-		  });
-		  // Text annotation for symbol and price
-		  var arrow = (lines[i][0][3] < lines[i][1][3]) ? ' &#9660; ' : ' &#9650; ';
-		  var change = Number.parseFloat(100*(lines[i][0][3] - lines[i][1][3])/lines[i][1][3]).toFixed(2) + '%';
-					var canvas_selector = $("#chart" + i).children('.jqplot-grid-canvas');
-					var priceAnnotation = '<div style="position: absolute;  display: inline-block; left: 70px; top: 25px;">';
-					priceAnnotation += "<p><b>Name</b>: " + components[lines[i][0][2]][0] + "</p>";
-					priceAnnotation += "<p><b>Sector</b>: " + components[lines[i][0][2]][2] + "</p>";
-					priceAnnotation += "<p><b>Price</b>: " + (lines[i][0][3] + arrow + change) + "</p>";
-					priceAnnotation += "<p><b>mRS</b>: " + Number.parseFloat(mLines[i][0][1]).toFixed(2) + "</p>";
-					if (holdingDate) {
-						priceAnnotation += "<p><b>Quantity</b>: " + holding[1] + "</p></div>";
-					} else {
-						priceAnnotation += "<p><b>Quantity</b>: " + Number.parseFloat(document.getElementById("position_size").value / lines[i][0][3]).toFixed(0) + "</p></div>";
-					}
-					$(priceAnnotation).insertAfter(canvas_selector);
-		}
-		i++;
-	  }
-	}
+      prices.plot = $.jqplot('chart' + i.toString(), [pLines[i], mLines[i], sLines[i]], {
+      title: lines[i][0][1] + " <img src='chrome/site/" + lines[i][0][1].toLowerCase() + ".png'> " + lines[i][0][2], height: 360, highlighter: {show: true}, cursor: {show: true, zoom: true}, grid: {background: '#fff'},
+      series: [
+        {lineWidth: 0.5, color: '#ccc', markerOptions: {show: false}},  // pLines (prices)
+        {yaxis: 'y2axis', lineWidth: 0.8, color: 'blue', markerOptions: {show: false}, rendererOptions: {smooth: true}},  // mLines (mRS)
+        {yaxis: 'y2axis', lineWidth: 0.8, color: 'lightskyblue', markerOptions: {show: false}, rendererOptions: {smooth: true}}  // sLines (mS)
+      ],
+      axes: {
+        xaxis: {renderer: $.jqplot.DateAxisRenderer, tickOptions: {formatString: '%Y-%m-%d', showGridline: false}}, 
+        yaxis: {tickOptions: {formatString: "%.2f", showGridline: false}},  // pLines (prices)
+        y2axis: {tickOptions: {formatString: "%.3f"}, tickInterval: 0.1, min: 0, max: 1}  // mLines (mRS) and sLines (mS)
+      },
+      // vertical line to display date of holding; variable holdingDate is used as boolean in the show-attribute
+      canvasOverlay: {show: holdingDate, objects: [{verticalLine: {x: new $.jsDate(holdingDate).getTime(), lineWidth: 0.5, shadow: false}}, horizontalbar]} 
+      });
+      // Text annotation for symbol and price
+      var arrow = (lines[i][0][3] < lines[i][1][3]) ? ' &#9660; ' : ' &#9650; ';
+      var change = Number.parseFloat(100*(lines[i][0][3] - lines[i][1][3])/lines[i][1][3]).toFixed(2) + '%';
+          var canvas_selector = $("#chart" + i).children('.jqplot-grid-canvas');
+          var priceAnnotation = '<div style="position: absolute;  display: inline-block; left: 70px; top: 25px;">';
+          priceAnnotation += "<p><b>Name</b>: " + components[lines[i][0][2]][0] + "</p>";
+          priceAnnotation += "<p><b>Sector</b>: " + components[lines[i][0][2]][2] + "</p>";
+          priceAnnotation += "<p><b>Price</b>: " + (lines[i][0][3].toFixed(2) + arrow + change) + "</p>";
+          priceAnnotation += "<p><b>mRS</b>: " + Number.parseFloat(mLines[i][0][1]).toFixed(2) + "</p>";
+          if (holdingDate) {
+            priceAnnotation += "<p><b>Quantity</b>: " + holding[1] + "</p></div>";
+          } else {
+            priceAnnotation += "<p><b>Quantity</b>: " + Number.parseFloat(document.getElementById("position_size").value / lines[i][0][3]).toFixed(0) + "</p></div>";
+          }
+          $(priceAnnotation).insertAfter(canvas_selector);
+    }
+    i++;
+    }
+  }
 
-	// Calculate weights
-	function setWeights() {
-	  weights = [];
-	  var k = document.getElementById("k").value;
-	  var lambda = document.getElementById("lambda").value;
-	  for (var x = 0.1; x < nrofperiods; x++) {
-		// w = Math.pow(x/lambda, k-1)*Math.exp(-x/lambda);  // gamma
-		w = Math.pow(x/lambda, k-1)*Math.exp(-Math.pow(x/lambda, k));  // weibull
-		weights.push([x, w]);
-	  }
-	  // Normalise the weights
-	  var sumweight = 0;
-	  for (x in weights) sumweight += weights[x][1];
-	  for (x in weights) weights[x][1] /= sumweight;
-	}
+  // Calculate weights
+  function setWeights() {
+    weights = [];
+    var k = document.getElementById("k").value;
+    var lambda = document.getElementById("lambda").value;
+    for (var x = 0.1; x < nrofperiods; x++) {
+    // w = Math.pow(x/lambda, k-1)*Math.exp(-x/lambda);  // gamma
+    w = Math.pow(x/lambda, k-1)*Math.exp(-Math.pow(x/lambda, k));  // weibull
+    weights.push([x, w]);
+    }
+    // Normalise the weights
+    var sumweight = 0;
+    for (x in weights) sumweight += weights[x][1];
+    for (x in weights) weights[x][1] /= sumweight;
+  }
 
-	// Calculate indicator values
-	function setIndicators() {
-	  for (var i in lines) {
-		pLines[i] = [];
-		mLines[i] = [];
-		iLines[i] = [];
-		sLines[i] = [];
-		// Second order statistics: mRS, mI and mS; also pLines (prices) is generated
-		for (var m = 0; m < lines[i].length-nrofperiods; m++) {
-		  var mUp = 0, mDown = 0, mLowIndex = 0, mHighIndex = 0, mS = 0;
-		  for (var w = 0; w < weights.length; w++) {
-			mUp += weights[w][1] * lines[i][m+w][4];
-			mDown += weights[w][1] * lines[i][m+w][5];
-			mLowIndex += weights[w][1] * lines[i][m+w][6];
-			mHighIndex += weights[w][1] * lines[i][m+w][7];
-			mS += weights[w][1] * lines[i][m+w][8];
-		  }
-		  pLines[i].push([lines[i][m][0], lines[i][m][3]]);
-		  mLines[i].push([lines[i][m][0], mUp/(mUp + mDown)]);
-		  iLines[i].push([lines[i][m][0], mLowIndex/(mLowIndex + mHighIndex)]);
-		  sLines[i].push([lines[i][m][0], mS]);
-		}
-	  }
-	}
+  // Calculate indicator values
+  function setIndicators() {
+    for (var i in lines) {
+    pLines[i] = [];
+    mLines[i] = [];
+    iLines[i] = [];
+    sLines[i] = [];
+    // Second order statistics: mRS, mI and mS; also pLines (prices) is generated
+    for (var m = 0; m < lines[i].length-nrofperiods; m++) {
+      var mUp = 0, mDown = 0, mLowIndex = 0, mHighIndex = 0, mS = 0;
+      for (var w = 0; w < weights.length; w++) {
+        mUp += weights[w][1] * lines[i][m+w][4];
+        mDown += weights[w][1] * lines[i][m+w][5];
+        mLowIndex += weights[w][1] * lines[i][m+w][6];
+        mHighIndex += weights[w][1] * lines[i][m+w][7];
+        mS += weights[w][1] * lines[i][m+w][8];
+      }
+      pLines[i].push([lines[i][m][0], lines[i][m][3]]);
+      mLines[i].push([lines[i][m][0], mUp/(mUp + mDown)]);
+      iLines[i].push([lines[i][m][0], mLowIndex/(mLowIndex + mHighIndex)]);  // iLines is not used, because of its low profitability
+      sLines[i].push([lines[i][m][0], mS]);
+    }
+    }
+  }
 
-	// Main function
-	$(document).ready(function() {
-	  // Sort prices array by exchange, symbol, then date in descending order
-	  prices_.sort((a, b) => (a[1].localeCompare(b[1]) || (a[2].localeCompare(b[2])) || (b[0].localeCompare(a[0]))));	
-	  // First order statistics: up, down, lowIndex, highIndex, low, high
-	  let r = 0;  // row index for prices array
-	  while (prices_[r+nrofperiods] !== undefined) {
-		var lowIndex = r, highIndex = r, low = prices_[r][3], high = prices_[r][3];
-		for (var m = 0; m < nrofperiods; m++) {
-		  lowIndex = (prices_[r+m][3] < low) ? r+m : lowIndex;
-		  highIndex = (prices_[r+m][3] > high) ? r+m : highIndex;
-		  low = Math.min(low, prices_[r+m][3]);
-		  high = Math.max(high, prices_[r+m][3]);
-		}
-		// data structure: date [0], symbol [1], exchange [2], close [3], up [4], down [5], lowIndex [6], highIndex [7], stochast [8]
-		prices_[r].push(Math.max(prices_[r][3]-prices_[r+1][3], 0), Math.max(prices_[r+1][3]-prices_[r][3], 0), lowIndex-r, highIndex-r, (prices_[r][3]-low)/(high-low));
-		r++;
-	  }
+  // Main function
+  $(document).ready(function() {
+    // Sort prices array by exchange, symbol, then date in descending order
+    prices_.sort((a, b) => (a[1].localeCompare(b[1]) || (a[2].localeCompare(b[2])) || (b[0].localeCompare(a[0]))));  
+    // First order statistics: up, down, lowIndex, highIndex, low, high
+    let r = 0;  // row index for prices array
+    while (prices_[r+nrofperiods] !== undefined) {
+    var lowIndex = r, highIndex = r, low = prices_[r][3], high = prices_[r][3];
+    for (var m = 0; m < nrofperiods; m++) {
+      lowIndex = (prices_[r+m][3] < low) ? r+m : lowIndex;
+      highIndex = (prices_[r+m][3] > high) ? r+m : highIndex;
+      low = Math.min(low, prices_[r+m][3]);
+      high = Math.max(high, prices_[r+m][3]);
+    }
+    // data structure: date [0], symbol [1], exchange [2], close [3], up [4], down [5], lowIndex [6], highIndex [7], stochast [8]
+    prices_[r].push(Math.max(prices_[r][3]-prices_[r+1][3], 0), Math.max(prices_[r+1][3]-prices_[r][3], 0), lowIndex-r, highIndex-r, (prices_[r][3]-low)/(high-low));
+    r++;
+    }
 
-	  // Lines array splits prices array, such that every symbol has its own line
-	  let prev = '';  // last known symbol
-	  let j = -1;     // index for lines array
-	  for (r in prices_) {
-		if (prev !== prices_[r][2]) {  // a new symbol requires a new lines array to be generated
-		  j++;
-		  lines[j] = [];
-		  prev = prices_[r][2];
-		}
-		lines[j].push(prices_[r]);
-	  }
-	  refresh();
-	})
-	</script>
-	# endblock content
+    // Lines array splits prices array, such that every symbol has its own line
+    let prev = '';  // last known symbol
+    let j = -1;     // index for lines array
+    for (r in prices_) {
+    if (prev !== prices_[r][2]) {  // a new symbol requires a new lines array to be generated
+      j++;
+      lines[j] = [];
+      prev = prices_[r][2];
+    }
+    lines[j].push(prices_[r]);
+    }
+    refresh();
+  })
+  </script>
+  # endblock content
 </body>
 
 </html>
