@@ -4,73 +4,73 @@
 # include "macros.html" ignore missing
 
 <head>
-	<title>
-		# block title
-		${_("Download")}
-		${ super() }
-		# endblock title
-	</title>
-	# block head
-	${ super() }
-	# endblock head
+  <title>
+    # block title
+    ${_("Download")}
+    ${ super() }
+    # endblock title
+  </title>
+  # block head
+  ${ super() }
+  # endblock head
 </head>
 
 <body>
-	# block content
-	<h2>Downloads</h2>
-	# if 'DOWNLOAD_ADD' in perm:
-	<form class="addnew" id="adddownload" method="post" enctype="multipart/form-data">
-		${jmacros.form_token_input()}
-		<fieldset>
-			<legend>Add Download:</legend>
-			<div class="field">
-				<label>File:
-					<input type="file" name="file" required="required" /></label>
-			</div><br />
-			<div class="field">
-				<label for="description">
-					Description:<br />
-					<input type="text" name="description" value="" required="required" size="50" /></label>
-			</div>
-		</fieldset>
-		<div class="buttons">
-			<input type="submit" name="submit" value="Add" />
-		</div>
-	</form>
-	# endif
-	<table class="wiki" id="downloadlist">
-			<tr>
-				<th class="header">Year</th>
-				<th class="header">File</th>
-				<th class="header">Description</th>
-			</tr>
-			# if not downloads:
-			<tr>
-				<td colspan="2">${_("No download data.")}</td>
-			</tr>
-			# endif
-			# for id, year, file, description in downloads
-			<tr>
-				<td class="year">
-					${year}
-				</td>			
-				<td class="file">
-					<a href="/downloads?sel=${id}">${file}</a>
-				</td>
-				<td class="description">
-					${description}
-				</td>
-			</tr>
-			# endfor
-	</table>
-		<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.20/datatables.min.css"/>
-		<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.20/datatables.min.js"></script>
-			<script type="text/javascript" language="javascript" class="init">
+  # block content
+  <h2>Downloads</h2>
+  # if 'DOWNLOAD_ADD' in perm:
+  <form class="addnew" id="adddownload" method="post" enctype="multipart/form-data">
+    ${jmacros.form_token_input()}
+    <fieldset>
+      <legend>Add Download:</legend>
+      <div class="field">
+        <label>File:
+          <input type="file" name="file" required="required" /></label>
+      </div><br />
+      <div class="field">
+        <label for="description">
+          Description:<br />
+          <input type="text" name="description" value="" required="required" size="50" /></label>
+      </div>
+    </fieldset>
+    <div class="buttons">
+      <input type="submit" name="submit" value="Add" />
+    </div>
+  </form>
+  # endif
+  <table class="wiki" id="downloadlist">
+      <tr>
+        <th class="header">Year</th>
+        <th class="header">File</th>
+        <th class="header">Description</th>
+      </tr>
+      # if not downloads:
+      <tr>
+        <td colspan="2">${_("No download data.")}</td>
+      </tr>
+      # endif
+      # for id, year, file, description in downloads
+      <tr>
+        <td class="year">
+          ${year}
+        </td>      
+        <td class="file">
+          <a href="/downloads?sel=${id}">${file}</a>
+        </td>
+        <td class="description">
+          ${description}
+        </td>
+      </tr>
+      # endfor
+  </table>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.20/datatables.min.css"/>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.20/datatables.min.js"></script>
+      <script type="text/javascript" language="javascript" class="init">
 $(document).ready( function () { $('#downloadlist').DataTable({ "columnDefs": [ { "visible": false, "targets": 0 } ], "order": [[ 0, 'asc' ]], "displayLength": 25, "drawCallback": function ( settings ) { var api = this.api(); var rows = api.rows( {page:'current'} ).nodes(); var last=null; api.column(0, {page:'current'} ).data().each( function ( group, i ) { if ( last !== group ) { $(rows).eq( i ).before( '<tr class="group"><td colspan="5">'+group+'</td></tr>' ); last = group; } } ); } } ); } );
-		</script>	
-	<p class="help">
-	</p>
-	# endblock content
+    </script>  
+  <p class="help">
+  </p>
+  # endblock content
 </body>
 
 </html>
