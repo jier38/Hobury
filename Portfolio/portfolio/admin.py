@@ -34,7 +34,7 @@ class PortfolioPanel(Component):
                 sels = req.args.getlist('sels')
                 if sels is not None and len(sels) > 0:
                     for sel in sels:
-                        sql = ("SELECT IFNULL(sum(abs(quantity) * case when type = 'Verkoop' then 1 else -1 end),0) as quantity "
+                        sql = ("SELECT IFNULL(sum(abs(quantity) * case when type = 'Verkoop' then 1 else -1 end), 0) as quantity "
                                "from invest.trades where type in ('Koop', 'Verkoop') and LOWER(portfolio) = (select LOWER(name) "
                                "from invest.portfolios where id = {})"
                               )
