@@ -55,7 +55,7 @@ class TradEntry(Component):
             return 'trade_list.html', data, {}
         else:
             data = {}
-            # Add warning when cash / quantity does not approximate the price of the last few days
+            # Add warning when cash/quantity ratio does not approximate the price of the last few days
             cursor = self.env.db_query(
                 "select value from invest.parameters where type = 'tolerance' and metric = 'quantity' limit 1"
             )
@@ -165,7 +165,7 @@ class TradEntry(Component):
                         data['symbol'] = temp
                         data['date'] = date
                         add_warning(
-                            req, 'The cash/quantity exceeds the price tolerance of the last 10 days.'
+                            req, 'The cash/quantity ratio exceeds the price from the last 10 days.'
                         )
                     else:
                         sql = ("INSERT INTO invest.trades "
