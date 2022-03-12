@@ -109,11 +109,7 @@
 					priceAnnotation += "<p><b>Sector</b>: " + components[lines[i][0][2]][2] + "</p>";
 					priceAnnotation += "<p><b>Price</b>: " + (lines[i][0][3] + arrow + change) + "</p>";
 					priceAnnotation += "<p><b>mRS</b>: " + Number.parseFloat(mLines[i][0][1]).toFixed(2) + "</p>";
-					if (holdingDate) {
-						priceAnnotation += "<p><b>Quantity</b>: " + holding[1] + "</p></div>";
-					} else {
-						priceAnnotation += "<p><b>Quantity</b>: " + Number.parseFloat(document.getElementById("position_size").value / lines[i][0][3]).toFixed(0) + "</p></div>";
-					}
+					priceAnnotation += "<p><b>Quantity</b>: " + (holdingDate ? holding[1] : Number.parseFloat(document.getElementById("position_size").value / lines[i][0][3]).toFixed(0)) + "</p></div>";
 					$(priceAnnotation).insertAfter(canvas_selector);
 		}
 		i++;
