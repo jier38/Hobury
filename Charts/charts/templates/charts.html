@@ -15,7 +15,7 @@ ${ super() }
 </head>
 
 <body>
-# block content	
+# block content
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
@@ -23,7 +23,7 @@ ${ super() }
 <script type="text/javascript" src="chrome/site/prefix.js"></script>
 <script type="text/javascript" src="chrome/site/components.js"></script>
 <script type="text/javascript" src="chrome/site/prices.js"></script>
-<script type="text/javascript" src="chrome/site/suffix.js"></script>	
+<script type="text/javascript" src="chrome/site/suffix.js"></script
 
 <table>
 <tr><td><div title="Nominal amount in local currency for a buy trade">Position size: </div></td><td><input id="position_size" type="number" value="2000" min="0" step="100" onchange="refresh();" /></td></tr>
@@ -107,7 +107,7 @@ function refresh() {
 			};
 
 			holdingline = holdingDate ? {
-				type: 'line',                                    
+				type: 'line',
 				x0: holdingDate,
 				y0: 0,
 				x1: holdingDate,
@@ -151,7 +151,7 @@ function refresh() {
 				autosize: true,
 				//width: 1000, 
 				//height: 500,
-				margin: {l: 50,	r: 50, b: 50, t: 0, pad: 0},
+				margin: {l: 50, r: 50, b: 50, t: 0, pad: 0},
 				xaxis: {tickformat: '%Y-%m-%d'},
 				yaxis2: {overlaying: 'y', side: 'right'},
 				hovermode: "closest",
@@ -198,7 +198,7 @@ function setWeights() {
 }
 
 // Calculate indicator values
-function setIndicators() {                
+function setIndicators() {
 	for (var i in lines) {
 		pLines[i] = [];
 		mLines[i] = [];
@@ -236,23 +236,23 @@ function setIndicators() {
 		for (x in sLines[i]) {
 			sLinesX[i].push(sLines[i][x][0]);
 			sLinesY[i].push(sLines[i][x][1]);
-		}   
-	}                             
+		}
+	}
 }
 
 // Main function
 $(document).ready(function() {
 	// Sort prices array by exchange, symbol, then date in descending order
-	prices_.sort((a, b) => (a[1].localeCompare(b[1]) || (a[2].localeCompare(b[2])) || (b[0].localeCompare(a[0]))));	
+	prices_.sort((a, b) => (a[1].localeCompare(b[1]) || (a[2].localeCompare(b[2])) || (b[0].localeCompare(a[0]))));
 	// First order statistics: up, down, lowIndex, highIndex, low, high
 	let r = 0;  // row index for prices array
 	while (prices_[r+nrofperiods] !== undefined) {
 		var lowIndex = r, highIndex = r, low = prices_[r][3], high = prices_[r][3];
 		for (var m = 0; m < nrofperiods; m++) {
-		lowIndex = (prices_[r+m][3] < low) ? r+m : lowIndex;
-		highIndex = (prices_[r+m][3] > high) ? r+m : highIndex;
-		low = Math.min(low, prices_[r+m][3]);
-		high = Math.max(high, prices_[r+m][3]);
+			lowIndex = (prices_[r+m][3] < low) ? r+m : lowIndex;
+			highIndex = (prices_[r+m][3] > high) ? r+m : highIndex;
+			low = Math.min(low, prices_[r+m][3]);
+			high = Math.max(high, prices_[r+m][3]);
 		}
 		// data structure: date [0], symbol [1], exchange [2], close [3], up [4], down [5], lowIndex [6], highIndex [7], stochast [8]
 		prices_[r].push(Math.max(prices_[r][3]-prices_[r+1][3], 0), Math.max(prices_[r+1][3]-prices_[r][3], 0), lowIndex-r, highIndex-r, (prices_[r][3]-low)/(high-low));
@@ -264,9 +264,9 @@ $(document).ready(function() {
 	let j = -1;     // index for lines array
 	for (r in prices_) {
 		if (prev !== prices_[r][2]) {  // a new symbol requires a new lines array to be generated
-		j++;
-		lines[j] = [];
-		prev = prices_[r][2];
+			j++;
+			lines[j] = [];
+			prev = prices_[r][2];
 		}
 		lines[j].push(prices_[r]);
 	}
