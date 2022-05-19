@@ -23,7 +23,7 @@ ${ super() }
 <script type="text/javascript" src="chrome/site/prefix.js"></script>
 <script type="text/javascript" src="chrome/site/components.js"></script>
 <script type="text/javascript" src="chrome/site/prices.js"></script>
-<script type="text/javascript" src="chrome/site/suffix.js"></script
+<script type="text/javascript" src="chrome/site/suffix.js"></script>
 
 <table>
 <tr><td><div title="Nominal amount in local currency for a buy trade">Position size: </div></td><td><input id="position_size" type="number" value="2000" min="0" step="100" onchange="refresh();" /></td></tr>
@@ -56,13 +56,13 @@ function refresh() {
 	// Render weights graph
 	$('#weights_graph').empty();
 	CHART = document.getElementById('weights_graph');
-	var line1 = {
+	var wLine = {
 		x: weightsX,
 		y: weightsY,
 		type: 'scatter', mode: 'lines', 
 		line: {shape: 'spline', smoothing: 0.1}
 	};
-	var data = [line1];
+	var data = [wLine];
 	var layout = {autosize: true};
 	var config = {displayModeBar: false};
 	Plotly.newPlot(CHART, data, layout, config);
@@ -117,7 +117,7 @@ function refresh() {
 			} : null;
 
 			CHART1 = document.getElementById('chart' + i.toString() + 'ploty');
-			var line1 = {
+			var pLine = {
 				name: 'price',
 				x: pLinesX[i],
 				y: pLinesY[i],
@@ -126,7 +126,7 @@ function refresh() {
 				showlegend: false,
 				line: {shape: 'spline', smoothing: 0.1, color: '#ccc', width: 0.5}
 			};
-			var line2 = {
+			var mLine = {
 				name: 'mRS',
 				x: mLinesX[i],
 				y: mLinesY[i],
@@ -136,7 +136,7 @@ function refresh() {
 				hovertemplate: '%{x|%Y-%m-%d}, %{y}', 
 				line: {shape: 'spline', smoothing: 0.1, color: 'blue', width: 0.8}
 			};
-			var line3 = {
+			var sLine = {
 				name: 'mS',
 				x: sLinesX[i],
 				y: sLinesY[i],
@@ -146,7 +146,7 @@ function refresh() {
 				hovertemplate: '%{x|%Y-%m-%d}, %{y}',
 				line: {shape: 'spline', smoothing: 0.1, color: 'lightskyblue', width: 0.8}
 			};
-			var data = [line1, line2, line3];
+			var data = [pLine, mLine, sLine];
 			var layout = { 
 				autosize: true,
 				//width: 1000, 
