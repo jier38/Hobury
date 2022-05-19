@@ -83,7 +83,7 @@ function refresh() {
 			element.innerHTML = lines[i][0][1] + " <img src='chrome/site/" + lines[i][0][1].toLowerCase() + ".png'> " + lines[i][0][2];
 			document.getElementById('chart' + i).appendChild(element);
 			var element = document.createElement('div');
-			element.id = 'chart' + i.toString() + 'ploty';
+			element.id = 'chart' + i.toString() + 'plotly';
 			document.getElementById('chart' + i).appendChild(element);
 
 			let holding = holdings[lines[i][0][2]];
@@ -116,7 +116,7 @@ function refresh() {
 				line: {color: 'grey', width: 0.5, dash: 'solid'}
 			} : null;
 
-			CHART1 = document.getElementById('chart' + i.toString() + 'ploty');
+			CHART1 = document.getElementById('chart' + i.toString() + 'plotly');
 			var pLine = {
 				name: 'price',
 				x: pLinesX[i],
@@ -162,7 +162,7 @@ function refresh() {
 			// Text annotation for symbol and price
 			var arrow = (lines[i][0][3] < lines[i][1][3]) ? ' &#9660; ' : ' &#9650; ';
 			var change = Number.parseFloat(100*(lines[i][0][3] - lines[i][1][3])/lines[i][1][3]).toFixed(2) + '%';
-			var canvas_selector = $("#chart" + i + 'ploty');
+			var canvas_selector = $("#chart" + i + 'plotly');
 			var priceAnnotation = '<div style="position: absolute; display: inline-block; left: 70px; top: 25px;">';
 			priceAnnotation += "<p><b>Name</b>: " + components[lines[i][0][2]][0] + "</p>";
 			priceAnnotation += "<p><b>Sector</b>: " + components[lines[i][0][2]][2] + "</p>";
