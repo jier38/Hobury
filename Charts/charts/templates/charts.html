@@ -88,10 +88,9 @@ function refresh() {
 
 			let holding = holdings[lines[i][0][2]];
 			let holdingDate = holding && holding[0];
-
-			horizontalbar = holdingDate ?
-				/* holding: horizontal bar at top of graph */ {rectangle: {xminOffset: "0px", xmaxOffset: "0px", yminOffset: "255px", ymaxOffset: "0px", color: "rgba(99, 99, 99, 0.1)"}} :
-				/* no holding: no horizontal bar */ null;
+			
+			/* when there is a holding, place horizontal bar at top of graph */
+			horizontalbar = holdingDate ? {rectangle: {xminOffset: "0px", xmaxOffset: "0px", yminOffset: "255px", ymaxOffset: "0px", color: "rgba(99, 99, 99, 0.1)"}} : null;
 
 			horizontalbar = {
 				type: 'rect',
