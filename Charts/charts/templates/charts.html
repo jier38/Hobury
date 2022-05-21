@@ -55,17 +55,13 @@ function refresh() {
 
 	// Render weights graph
 	$('#weights_graph').empty();
-	CHART = document.getElementById('weights_graph');
 	var wLine = {
 		x: weightsX,
 		y: weightsY,
 		type: 'scatter', mode: 'lines', 
-		line: {shape: 'spline', smoothing: 0.1}
+		line: {shape: 'spline', smoothing: 0.2}
 	};
-	var data = [wLine];
-	var layout = {autosize: true};
-	var config = {displayModeBar: false};
-	Plotly.newPlot(CHART, data, layout, config);
+	Plotly.newPlot(document.getElementById('weights_graph'), [wLine], {autosize: true}, {displayModeBar: false});
 
 	// Render prices graphs
 	$('#prices_graph').empty();
@@ -90,20 +86,18 @@ function refresh() {
 			let holdingDate = holding && holding[0];
 			
 			/* when there is a holding, place horizontal bar at top of graph */
-			horizontalbar = holdingDate ? {rectangle: {xminOffset: "0px", xmaxOffset: "0px", yminOffset: "255px", ymaxOffset: "0px", color: "rgba(99, 99, 99, 0.1)"}} : null;
-
-			horizontalbar = {
+			horizontalbar = holdingDate ? {
 				type: 'rect',
 				xref: 'paper',
 				yref: 'y2',
 				x0: 0,
-				y0: holdingDate ? 0.85 : 0,
+				y0: 0.85,
 				x1: 1,
-				y1: holdingDate ? 1 : 0.15,
+				y1: 1,
 				fillcolor: 'rgba(99, 99, 99, 0.1)',
 				line: {width: 0},
 				opacity: 0.7,
-			};
+			} : null;
 
 			holdingline = holdingDate ? {
 				type: 'line',
@@ -115,7 +109,6 @@ function refresh() {
 				line: {color: 'grey', width: 0.5, dash: 'solid'}
 			} : null;
 
-			CHART1 = document.getElementById('chart' + i.toString() + 'plotly');
 			var pLine = {
 				name: 'price',
 				x: pLinesX[i],
@@ -145,20 +138,18 @@ function refresh() {
 				hovertemplate: '%{x|%Y-%m-%d}, %{y}',
 				line: {shape: 'spline', smoothing: 0.1, color: 'lightskyblue', width: 0.8}
 			};
-			var data = [pLine, mLine, sLine];
 			var layout = { 
 				autosize: true,
 				//width: 1000, 
 				//height: 500,
 				margin: {l: 50, r: 50, b: 50, t: 0, pad: 0},
-				xaxis: {tickformat: '%Y-%m-%d', showgrid: false},
-				yaxis2: {overlaying: 'y', side: 'right', tickmode: 'linear', tick0: 0, dtick: 0.1},
+				xaxis: {tickformat: '%Y-%m-%d', showgrid: false, linecolor: '#999', mirror: true},
+				yaxis: {showgrid: false},
+				yaxis2: {overlaying: 'y', side: 'right', tickmode: 'linear', tick0: 0, dtick: 0.1, linecolor: '#999', mirror: true},
 				hovermode: "closest",
-				yaxis = { showgrid: false},
 				shapes: [holdingline, horizontalbar]
 			};
-			var config = {displayModeBar: false};
-			Plotly.newPlot(CHART1, data, layout, config);
+			Plotly.newPlot(document.getElementById('chart' + i.toString() + 'plotly'), [pLine, mLine, sLine], layout, {displayModeBar: false});
 			// Text annotation for symbol and price
 			var arrow = (lines[i][0][3] < lines[i][1][3]) ? ' &#9660; ' : ' &#9650; ';
 			var change = Number.parseFloat(100*(lines[i][0][3] - lines[i][1][3])/lines[i][1][3]).toFixed(2) + '%';
@@ -260,7 +251,7 @@ $(document).ready(function() {
 	}
 
 	// Lines array splits prices array, such that every symbol has its own line
-	let prev = '';  // last known symbol
+	let prev = '';  // most recent symbol
 	let j = -1;     // index for lines array
 	for (r in prices_) {
 		if (prev !== prices_[r][2]) {  // a new symbol requires a new lines array to be generated
