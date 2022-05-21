@@ -18,7 +18,7 @@ ${ super() }
 # block content
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
-<link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
 <script type="text/javascript" src="https://cdn.plot.ly/plotly-2.9.0.min.js"></script>
 <script type="text/javascript" src="chrome/site/prefix.js"></script>
 <script type="text/javascript" src="chrome/site/components.js"></script>
@@ -151,11 +151,10 @@ function refresh() {
 				//width: 1000, 
 				//height: 500,
 				margin: {l: 50, r: 50, b: 50, t: 0, pad: 0},
-				xaxis: {tickformat: '%Y-%m-%d'},
-				yaxis2: {overlaying: 'y', side: 'right'},
+				xaxis: {tickformat: '%Y-%m-%d', showgrid: false},
+				yaxis2: {overlaying: 'y', side: 'right', tickmode: 'linear', tick0: 0, dtick: 0.1},
 				hovermode: "closest",
-				xaxis = list(showgrid = FALSE),
-				yaxis = list(showgrid = FALSE),
+				yaxis = { showgrid: false},
 				shapes: [holdingline, horizontalbar]
 			};
 			var config = {displayModeBar: false};
