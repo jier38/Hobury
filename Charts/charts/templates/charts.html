@@ -17,7 +17,7 @@ ${ super() }
 <body>
 # block content
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
 <script type="text/javascript" src="https://cdn.plot.ly/plotly-2.9.0.min.js"></script>
 <script type="text/javascript" src="chrome/site/prefix.js"></script>
@@ -38,7 +38,7 @@ ${ super() }
 <script type="text/javascript" nonce="r@nd0m">
 var nrofperiods = 24;
 var prices = {plot: ''};
-let weights = [], lines = [], pLines = [], mLines = [], sLines = [], iLines = [];
+let lines = [], pLines = [], mLines = [], sLines = [], iLines = [];
 let weightsX = [], weightsY = [];
 let pLinesX = [], mLinesX = [], sLinesX = [], pLinesY = [], mLinesY = [], sLinesY = [];
 
@@ -91,7 +91,7 @@ function refresh() {
 				xref: 'paper',
 				yref: 'y2',
 				x0: 0,
-				y0: 0.85,
+				y0: 0.8,
 				x1: 1,
 				y1: 1,
 				fillcolor: 'rgba(99, 99, 99, 0.1)',
@@ -140,8 +140,6 @@ function refresh() {
 			};
 			var layout = { 
 				autosize: true,
-				//width: 1000, 
-				//height: 500,
 				margin: {l: 50, r: 50, b: 50, t: 0, pad: 0},
 				xaxis: {tickformat: '%Y-%m-%d', showgrid: false, linecolor: '#999', mirror: true},
 				yaxis: {showgrid: false},
@@ -168,24 +166,19 @@ function refresh() {
 
 // Calculate weights
 function setWeights() {
-	weights = [];
 	weightsX = [];
 	weightsY = [];
 	var k = document.getElementById("k").value;
 	var lambda = document.getElementById("lambda").value;
 	for (var x = 0.1; x < nrofperiods; x++) {
-		// w = Math.pow(x/lambda, k-1)*Math.exp(-x/lambda);  // gamma
-		w = Math.pow(x/lambda, k-1)*Math.exp(-Math.pow(x/lambda, k));  // weibull
-		weights.push([x, w]);
+		weightsX.push(x);
+		// Math.pow(x/lambda, k-1)*Math.exp(-x/lambda);  // gamma
+		weightsY.push(Math.pow(x/lambda, k-1)*Math.exp(-Math.pow(x/lambda, k)));  // weibull
 	}
 	// Normalise the weights
 	var sumweight = 0;
-	for (x in weights) sumweight += weights[x][1];
-	for (x in weights) weights[x][1] /= sumweight;
-	for (x in weights) {
-		weightsX.push(weights[x][0]);
-		weightsY.push(weights[x][1]);
-	}
+	for (x in weightsY) sumweight += weightsY[x];
+	for (x in weightsY) weightsY[x] /= sumweight;
 }
 
 // Calculate indicator values
@@ -204,12 +197,12 @@ function setIndicators() {
 		// Second order statistics: mRS, mI and mS; also pLines (prices) is generated
 		for (var m = 0; m < lines[i].length-nrofperiods; m++) {
 		var mUp = 0, mDown = 0, mLowIndex = 0, mHighIndex = 0, mS = 0;
-		for (var w = 0; w < weights.length; w++) {
-			mUp += weights[w][1] * lines[i][m+w][4];
-			mDown += weights[w][1] * lines[i][m+w][5];
-			mLowIndex += weights[w][1] * lines[i][m+w][6];
-			mHighIndex += weights[w][1] * lines[i][m+w][7];
-			mS += weights[w][1] * lines[i][m+w][8];
+		for (var w = 0; w < weightsY.length; w++) {
+			mUp += weightsY[w] * lines[i][m+w][4];
+			mDown += weightsY[w] * lines[i][m+w][5];
+			mLowIndex += weightsY[w] * lines[i][m+w][6];
+			mHighIndex += weightsY[w] * lines[i][m+w][7];
+			mS += weightsY[w] * lines[i][m+w][8];
 		}
 		pLines[i].push([lines[i][m][0], lines[i][m][3]]);
 		mLines[i].push([lines[i][m][0], mUp/(mUp + mDown)]);
