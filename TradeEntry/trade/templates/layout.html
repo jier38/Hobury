@@ -1,4 +1,4 @@
-{# Copyright (C) 2020-2022 Hobury Investments
+{# Copyright (C) 2006-2020 Edgewall Software
 
   This software is licensed as described in the file COPYING, which
   you should have received as part of this distribution. The terms
@@ -58,7 +58,7 @@
     #   if chrome.script_data:
     <script>
       #   for key, value in chrome.script_data.items():
-      var ${key} = ${to_json(value)|safe};
+      var ${key}=${to_json(value)|safe};
       #   endfor
     </script>
     #   endif
@@ -139,7 +139,7 @@
     #   if chrome.late_script_data:
     <script>
       #   for key, value in chrome.late_script_data.items():
-      var ${key} = ${to_json(value)|safe};
+      var ${key}=${to_json(value)|safe};
       #   endfor
     </script>
     #   endif

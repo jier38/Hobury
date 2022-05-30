@@ -4,161 +4,168 @@
 # include "macros.html" ignore missing
 
 <head>
-  <title>
-    # block title
-    ${_("Trade")}
-    ${ super() }
-    # endblock title
-  </title>
-  # block head
-  ${ super() }
-  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script>
-  <script>
-    function callChange(exchange) {
-      var symbol = document.getElementById("components");
-      var str = '';
-      currency_list = document.getElementById('currency');
-        # for metric, currency in exchangeList
-        if (exchange == '${metric}') { 
-          # for exchange, symbol, name in symbolList
-          # if metric in exchange:
-            str += '<option value="${symbol}">${name}</option>';
-          # endif
-          # endfor
-        }
-        if (exchange == '${metric}') {
-          currency_list.selectedIndex = currency_list.querySelector('option[value="${currency}"]').index;
-        }
-        # endfor
-      symbol.innerHTML = str;
-    }
+	<title>
+		# block title
+		${_("Trade")}
+		${ super() }
+		# endblock title
+	</title>
+	# block head
+	${ super() }
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	<script>
+		function callChange(exchange) {
+			var symbol = document.getElementById("components");
+			var str = '';
+			currency_list = document.getElementById('currency');
+			  # for metric, currency in exchangeList      
+				if (exchange == '${metric}') { 
+				  # for exchange, symbol, name in symbolList
+					# if metric in exchange:
+						str += '<option value="${symbol}">${name}</option>';
+					# endif
+				  # endfor
+				}	
+				if (exchange == '${metric}') {
+					currency_list.selectedIndex = currency_list.querySelector('option[value="${currency}"]').index;
+				}
+			  # endfor
+			symbol.innerHTML = str;
+		}
 
-    $(function () {
-      $("#date").datepicker({
-        dateFormat: "yy-mm-dd"
-      });
-    });
-  </script>
-  # endblock
+		$(function () {
+			$("#date").datepicker({
+				dateFormat: "yy-mm-dd"
+			});
+		});
+	</script>
+	# endblock
 </head>
 
 <body>
-  # block content
-  <h2>Trade Entry</h2>
-  <form class="form-horizontal" method="POST">
-    ${jmacros.form_token_input()}
-    <fieldset>
-      <legend>Trades</legend>
-      <table>
-        <tr>
-          <td><label class="col-md-4 control-label" for="date">Trade date</label>: </td>
-          <td>
-            <div class="col-md-2">
-              <input type="text" value="${date}" id="date" name="date" class="form-control" />
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td><label class="col-md-4 control-label" for="portfolio">Portfolio</label>: </td>
-          <td>
-            <div class="col-md-2">
-              <select id="portfolio" name="portfolio" class="form-control">
-                # for name in portfolioList
-                <option value="${name}">${name}</option>
-                # endfor
-              </select>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td><label class="col-md-4 control-label" for="type">Koop / Verkoop</label>: </td>
-          <td>
-            <div class="col-md-2">
-              <select id="type" name="type" class="form-control">
-                <option value="Koop">Koop</option>
-                <option value="Verkoop">Verkoop</option>
-              </select>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td><label class="col-md-4 control-label" for="quantity">Quantity</label>: </td>
-          <td>
-            <div class="col-md-4">
-              <input id="quantity" name="quantity" type="number" placeholder="0" value="0" class="form-control input-md" required="required" value="${quantity}" min="0" max="${tolerance}" />
-              <span class="help-block">Enter the quantity bought or sold</span>
-              <input id="entireholding" name="entireholding" type="checkbox" />
-              <label for="entireholding">Entire holding</label>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td><label class="col-md-4 control-label" for="exchange">Exchange</label>: </td>
-          <td>
-            <div class="col-md-2">
-              <select id="exchange" name="exchange" class="form-control" onchange="callChange(this.value);" required="required">
-                <option value=''></option>
-                # for metric, currency in exchangeList
-                <option value="${metric}">${metric}</option>
-                # endfor
-              </select>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td><label class="col-md-4 control-label" for="symbol">Name or symbol</label>: </td>
-          <td>
-            <div class="col-md-4">
-              <input id="symbol" name="symbol" type="text" placeholder="placeholder" class="form-control input-md" required="required" list="components" autocomplete="off" maxlength="7" value="${symbol}" />
-              <datalist id="components"></datalist>
-              <span class="help-block">Name or symbol of instrument traded</span>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td><label class="col-md-4 control-label" for="cash">Cash</label>: </td>
-          <td>
-            <div class="col-md-4">
-              <input id="cash" name="cash" type="number" class="form-control input-md" required="required" placeholder="0.00" min="0" value="0" step="0.01" pattern="^\d+(?:\.\d{1,2})?$" value="${cash}" />
-              <span class="help-block">Settlement amount</span>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td><label class="col-md-4 control-label" for="currency">Currency</label>: </td>
-          <td>
-            <div class="col-md-2">
-              <select id="currency" name="currency" value="EUR" class="form-control">
-                # for metric in currencyList
-                <option value="${metric}">${metric}</option>
-                # endfor
-              </select>
-            </div>
-          </td>
-        </tr>
-      </table>
-      <input type="submit" value="Submit" />
-      <input type="reset" />
-    </fieldset>
-    <fieldset>
-      <legend>Trades</legend>
-      <a href="/trade/list">Trade List</a>
-    </fieldset>
-    <script>
-      var po = $('#portfolio').children('option[value="${portfolio}"]');
-      po.attr('selected', 'selected');
-      var bo = $('#type').children('option[value="${type}"]');
-      bo.attr('selected', 'selected');
-      var eo = $('#exchange').children('option[value="${exchange}"]');
-      eo.attr('selected', 'selected');
-      callChange('${exchange}');
-      var co = $('#currency').children('option[value="${currency}"]');
-      co.attr('selected', 'selected');
-    </script>
-  </form>
-  # endblock content
+	# block content
+	<h2>Trade Entry</h2>
+	<form class="form-horizontal" method="POST">
+		${jmacros.form_token_input()}
+		<fieldset>
+			<legend>Trades</legend>
+			<table>
+				<tr>
+					<td><label class="col-md-4 control-label" for="date">Trade Date</label></td>
+					<td>
+						<div class="col-md-2">
+							<input type="text" value="${date}" id="date" name="date"
+								class="form-control" />
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td><label class="col-md-4 control-label" for="portfolio">Portfolio</label></td>
+					<td>
+						<div class="col-md-2">
+							<select id="portfolio" name="portfolio" class="form-control">
+								# for name in portfolioList
+								<option value="${name}">${name}</option>
+								# endfor
+							</select>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td><label class="col-md-4 control-label" for="type">Koop / Verkoop</label></td>
+					<td>
+						<div class="col-md-2">
+							<select id="type" name="type" class="form-control">
+								<option value="Koop">Koop</option>
+								<option value="Verkoop">Verkoop</option>
+							</select>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td><label class="col-md-4 control-label" for="quantity">Quantity</label></td>
+					<td>
+						<div class="col-md-4">
+							<input id="quantity" name="quantity" type="number" placeholder="0" value="0"
+								class="form-control input-md" required="required" value="${quantity}" min="0"
+								max="${tolerance}" />
+							<span class="help-block">Enter the quantity bought or sold</span>
+							<input id="entireholding" name="entireholding" type="checkbox" />
+							<label for="entireholding">Entire holding</label>							
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td><label class="col-md-4 control-label" for="exchange">Exchange</label></td>
+					<td>
+						<div class="col-md-2">
+							<select id="exchange" name="exchange" class="form-control"
+								onchange="callChange(this.value);" required="required">
+								<option value=''></option>
+								# for metric, currency in exchangeList
+								<option value="${metric}">${metric}</option>
+								# endfor
+							</select>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td><label class="col-md-4 control-label" for="symbol">Name or symbol</label></td>
+					<td>
+						<div class="col-md-4">
+							<input id="symbol" name="symbol" type="text" placeholder="placeholder"
+								class="form-control input-md" required="required" list="components" autocomplete="off"
+								maxlength="5" value="${symbol}" />
+							<datalist id="components"></datalist>
+							<span class="help-block">Name or symbol of instrument traded</span>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td><label class="col-md-4 control-label" for="cash">Cash</label></td>
+					<td>
+						<div class="col-md-4">
+							<input id="cash" name="cash" type="number" placeholder="0" class="form-control input-md"
+								required="required" placeholder="0.00" min="0" value="0" step="0.01" pattern="^\d+(?:\.\d{1,2})?$" value="${cash}" min="1" />
+							<span class="help-block">Settlement amount</span>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td><label class="col-md-4 control-label" for="currency">Currency</label></td>
+					<td>
+						<div class="col-md-2">
+							<select id="currency" name="currency" class="form-control">
+								# for metric in currencyList
+								<option value="${metric}">${metric}</option>
+								# endfor
+							</select>
+						</div>
+					</td>
+				</tr>
+			</table>
+			<input type="submit" value="Submit" />
+			<input type="reset" />
+		</fieldset>
+		<fieldset>
+			<legend>Trades</legend>
+			<a href="/trade/list">Trade List</a>
+		</fieldset>
+		<script>
+			var po = $('#portfolio').children('option[value="${portfolio}"]');
+			po.attr('selected', 'selected');
+			var bo = $('#type').children('option[value="${type}"]');
+			bo.attr('selected', 'selected');
+			var eo = $('#exchange').children('option[value="${exchange}"]');
+			eo.attr('selected', 'selected');
+			callChange('${exchange}');
+			var co = $('#currency').children('option[value="${currency}"]');
+			co.attr('selected', 'selected');
+		</script>
+	</form>
+	# endblock content
 </body>
 
 </html>
