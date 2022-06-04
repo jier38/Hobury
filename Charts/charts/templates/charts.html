@@ -116,7 +116,8 @@ function refresh() {
 				type: 'scatter', mode: 'lines',
 				hovertemplate: '%{x|%Y-%m-%d}, %{y}', 
 				showlegend: false,
-				line: {shape: 'spline', smoothing: 0.1, color: '#ccc', width: 0.5}
+				line: {shape: 'spline', smoothing: 0.1, color: '#ccc', width: 0.5},
+				hoverlabel: {bgcolor: '#ccc', font: {color: '#666'}}
 			};
 			var mLine = {
 				name: 'mRS',
@@ -126,7 +127,8 @@ function refresh() {
 				yaxis: 'y2',
 				showlegend: false,
 				hovertemplate: '%{x|%Y-%m-%d}, %{y}', 
-				line: {shape: 'spline', smoothing: 0.1, color: 'blue', width: 0.8}
+				line: {shape: 'spline', smoothing: 0.1, color: 'blue', width: 0.8},
+				hoverlabel: {bgcolor: 'blue', font: {color: '#cef'}}
 			};
 			var sLine = {
 				name: 'mS',
@@ -136,14 +138,17 @@ function refresh() {
 				yaxis: 'y2',
 				showlegend: false,
 				hovertemplate: '%{x|%Y-%m-%d}, %{y}',
-				line: {shape: 'spline', smoothing: 0.1, color: 'lightskyblue', width: 0.8}
+				line: {shape: 'spline', smoothing: 0.1, color: 'lightskyblue', width: 0.8},
+				hoverlabel: {bgcolor: '#cef', font: {color: '#339'}}
 			};
 			var layout = { 
 				autosize: true,
-				margin: {l: 50, r: 50, b: 50, t: 0, pad: 0},
+				height: 320,
+				margin: {l: 50, r: 50, b: 50, t: 1, pad: 0},
 				xaxis: {tickformat: '%Y-%m-%d', showgrid: false, linecolor: '#999', mirror: true},
-				yaxis: {showgrid: false},
-				yaxis2: {overlaying: 'y', side: 'right', tickmode: 'linear', tick0: 0, dtick: 0.1, linecolor: '#999', mirror: true},
+				xaxis2: {overlaying: 'x', showgrid: false, linecolor: '#999'},
+				yaxis: {showgrid: false, ticksuffix: ' '},
+				yaxis2: {overlaying: 'y', side: 'right', tickmode: 'linear', tick0: 0, dtick: 0.1, tickprefix: ' ', tickformat: '.1f', linecolor: '#999', mirror: true},
 				hovermode: "closest",
 				shapes: [holdingline, horizontalbar]
 			};
