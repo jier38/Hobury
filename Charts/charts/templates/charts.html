@@ -126,7 +126,7 @@ function refresh() {
 				type: 'scatter', mode: 'lines', 
 				yaxis: 'y2',
 				showlegend: false,
-				hovertemplate: '%{x|%Y-%m-%d}, %{y}', 
+				hovertemplate: '%{x|%Y-%m-%d}, %{y:.2f}', 
 				line: {shape: 'spline', smoothing: 0.1, color: 'blue', width: 0.8},
 				hoverlabel: {bgcolor: 'blue', font: {color: '#cef'}}
 			};
@@ -137,7 +137,7 @@ function refresh() {
 				type: 'scatter', mode: 'lines', 
 				yaxis: 'y2',
 				showlegend: false,
-				hovertemplate: '%{x|%Y-%m-%d}, %{y}',
+				hovertemplate: '%{x|%Y-%m-%d}, %{y:.2f}',
 				line: {shape: 'spline', smoothing: 0.1, color: 'lightskyblue', width: 0.8},
 				hoverlabel: {bgcolor: '#cef', font: {color: '#339'}}
 			};
@@ -149,7 +149,7 @@ function refresh() {
 				xaxis2: {overlaying: 'x', showgrid: false, linecolor: '#999'},
 				yaxis: {showgrid: false, ticksuffix: ' '},
 				yaxis2: {overlaying: 'y', side: 'right', tickmode: 'linear', tick0: 0, dtick: 0.1, tickprefix: ' ', tickformat: '.1f', linecolor: '#999', mirror: true},
-				hovermode: "closest",
+				hovermode: "x unified",
 				shapes: [holdingline, horizontalbar]
 			};
 			Plotly.newPlot(document.getElementById('chart' + i.toString() + 'plotly'), [pLine, mLine, sLine], layout, {displayModeBar: false});
