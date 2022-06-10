@@ -114,11 +114,18 @@ $(function () {
 			</td>
 		</tr>
 		<tr>
-			<td><label class="col-md-4 control-label" for="cash">Cash:</label></td>
+			<td><label class="col-md-4 control-label" for="executionprice"><div title="Price at which the trade was executed, according to broker">Execution price:</div></label></td>
+			<td>
+				<div class="col-md-4">
+					<input id="executionprice" name="executionprice" type="number" placeholder="0" class="form-control input-md" required="required" placeholder="0.00" min="0" value="0" step="0.01" pattern="^\d+(?:\.\d{1,2})?$" value="${cash}" min="1" />
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td><label class="col-md-4 control-label" for="cash"><div title="Settlement amount">Cash:</div></label></td>
 			<td>
 				<div class="col-md-4">
 					<input id="cash" name="cash" type="number" placeholder="0" class="form-control input-md" required="required" placeholder="0.00" min="0" value="0" step="0.01" pattern="^\d+(?:\.\d{1,2})?$" value="${cash}" min="1" />
-					<span class="help-block">Settlement amount</span>
 				</div>
 			</td>
 		</tr>
