@@ -89,6 +89,7 @@ class TradEntry(Component):
                 currency = req.args.get('currency').strip()
                 temp = req.args.get('symbol').strip()
                 date = req.args.get('date').strip()
+                executionprice = req.args.get('executionprice').strip()
                 symbol = ''
                 entireholding = req.args.get('entireholding')		
                 for row in cursor:
@@ -108,6 +109,7 @@ class TradEntry(Component):
                     data['cash'] = cash
                     data['symbol'] = temp
                     data['date'] = date
+                    data['executionprice'] = executionprice
                     add_warning(req, 'Please enter valid symbol or name.')
                 else:
                     sql = (
@@ -157,6 +159,7 @@ class TradEntry(Component):
                         data['cash'] = cash
                         data['symbol'] = temp
                         data['date'] = date
+                        data['executionprice'] = executionprice
                         add_warning(req, 'The security is no longer tradeable.')
                     elif float(cash)/int(quantity) > float(data['price'][0]):
                         data['portfolio'] = portfolio
@@ -167,6 +170,7 @@ class TradEntry(Component):
                         data['cash'] = cash
                         data['symbol'] = temp
                         data['date'] = date
+                        data['executionprice'] = executionprice
                         add_warning(
                             req,
                             'The cash/quantity exceeds the price tolerance '
@@ -176,10 +180,10 @@ class TradEntry(Component):
                         sql = (
                                   "INSERT INTO invest.trades "
                                   "(portfolio,type,quantity,exchange,"
-                                  "symbol,cash,currency,date,description) "
-                                  "VALUES(%s,%s,%s,%s,%s,%s,%s,%s,(select name from invest.components where exchange = %s and symbol =%s))"
+                                  "symbol,cash,currency,date,description,executionprice) "
+                                  "VALUES(%s,%s,%s,%s,%s,%s,%s,%s,(select name from invest.components where exchange = %s and symbol =%s),%s)"
                               )
-                        args = (portfolio.lower(), type, quantity, exchange, symbol, cash, currency, date, exchange, symbol)
+                        args = (portfolio.lower(), type, quantity, exchange, symbol, cash, currency, date, exchange, symbol, executionprice)
                         self.env.db_transaction(sql, args)
                         add_notice(req, 'Your trade has been saved.')
             chrome = Chrome(self.env)
