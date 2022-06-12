@@ -48,17 +48,13 @@ class TradEntry(Component):
 				"left join invest.components c on t.exchange = c.exchange and t.symbol = c.symbol "
                 "where type = 'Koop' group by t.portfolio, t.exchange, t.symbol, c.name"
 			)
-            data['trades'] = [
-                                 (
-                                     row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7]
-						         ) for row in cursor
-							 ]
+            data['trades'] = [(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7]) for row in cursor]
             return 'trade_list.html', data, {}
         else:
             data = {}
             cursor = self.env.db_query(
                          "SELECT value FROM invest.parameters "
-                         "WHERE type='tolerance' and metric='quantity' "
+                         "WHERE type = 'tolerance' and metric = 'quantity' "
                          "LIMIT 1"
                      )
             data['tolerance'] = [(row[0]) for row in cursor]
@@ -68,15 +64,14 @@ class TradEntry(Component):
             data['currency'] = "EUR"
             data['currencyList'] = [(row[0]) for row in cursor]
             cursor = self.env.db_query(
-                         "SELECT distinct exchange as metric, currency  from invest.exchanges order by exchange"
+                         "SELECT distinct exchange as metric, currency from invest.exchanges order by exchange"
                      )
             data['exchangeList'] = [(row[0], row[1]) for row in cursor]
             cursor = self.env.db_query(
                 "SELECT name FROM invest.portfolios ORDER BY name")
             data['portfolioList'] = [(row[0]) for row in cursor]
             cursor = self.env.db_query(
-                         "SELECT exchange, symbol, name "
-                         "FROM invest.components ORDER BY exchange, symbol"
+                         "SELECT exchange, symbol, name FROM invest.components ORDER BY exchange, symbol"
                      )
             data['symbolList'] = [(row[0], row[1], row[2]) for row in cursor]
             data['date'] = datetime.now().strftime('%Y-%m-%d')
@@ -113,10 +108,10 @@ class TradEntry(Component):
                     add_warning(req, 'Please enter valid symbol or name.')
                 else:
                     sql = (
-                              "SELECT IFNULL(avg(close),0)*(1+( "
+                              "SELECT IFNULL(avg(close), 0)*(1+( "
                               "SELECT avg(value) FROM invest.parameters "
-                              "WHERE type='tolerance' and metric='cash')) " 
-                              "FROM invest.prices WHERE exchange=%s and symbol=%s "
+                              "WHERE type = 'tolerance' and metric = 'cash')) " 
+                              "FROM invest.prices WHERE exchange = %s and symbol = %s "
                               "and datediff(now(), date) < 10"
                           )
                     args = (exchange, symbol)
@@ -133,15 +128,15 @@ class TradEntry(Component):
                     holding = [(row[0]) for row in cursor]		
                     if type.lower() == 'verkoop' and entireholding == 'on':
                         sql = (
-					             "SELECT exchange, symbol, sum(quantity * case when type = 'Verkoop' then -1 else 1 end) as quantity "
-                                 "FROM invest.trades WHERE exchange=%s and symbol= %s and type in ('Koop', 'Verkoop') "
+				"SELECT exchange, symbol, sum(quantity * case when type = 'Verkoop' then -1 else 1 end) as quantity "
+                                 "FROM invest.trades WHERE exchange = %s and symbol = %s and type in ('Koop', 'Verkoop') "
                                  "GROUP BY exchange, symbol"
                               )
                         args = (exchange, symbol)
                         cursor = self.env.db_query(sql, args)
                         data['holding'] = [(row[2]) for row in cursor]
                         quantity = data['holding'][0]
-                    if (type.lower()=='verkoop') and (len(holding)<=0 or int(holding[0])<=0):
+                    if (type.lower() == 'verkoop') and (len(holding) <= 0 or int(holding[0]) <= 0):
                         add_warning(req, 'There is no holding of that symbol in this portfolio.')		
                     elif int(quantity) <= 0:
                         if entireholding == 'on':
@@ -160,7 +155,7 @@ class TradEntry(Component):
                         data['symbol'] = temp
                         data['date'] = date
                         data['executionprice'] = executionprice
-                        add_warning(req, 'The security is no longer tradeable.')
+                        add_warning(req, 'The security is no longer tradeable or there is no price for that symbol on that date.')
                     elif float(cash)/int(quantity) > float(data['price'][0]):
                         data['portfolio'] = portfolio
                         data['type'] = type
@@ -172,16 +167,13 @@ class TradEntry(Component):
                         data['date'] = date
                         data['executionprice'] = executionprice
                         add_warning(
-                            req,
-                            'The cash/quantity exceeds the price tolerance '
-                            'of the last 10 days.'
+                            req, 'The cash/quantity exceeds the price tolerance of the last 10 days.'
                         )
                     else:
                         sql = (
                                   "INSERT INTO invest.trades "
-                                  "(portfolio,type,quantity,exchange,"
-                                  "symbol,cash,currency,date,description,executionprice) "
-                                  "VALUES(%s,%s,%s,%s,%s,%s,%s,%s,(select name from invest.components where exchange = %s and symbol =%s),%s)"
+                                  "(portfolio, type, quantity, exchange, symbol, cash, currency, date, description, executionprice) "
+                                  "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, (select name from invest.components where exchange = %s and symbol = %s), %s)"
                               )
                         args = (portfolio.lower(), type, quantity, exchange, symbol, cash, currency, date, exchange, symbol, executionprice)
                         self.env.db_transaction(sql, args)
