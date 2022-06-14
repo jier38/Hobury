@@ -12,7 +12,7 @@ from trac.web.chrome import (
                             )
 
 
-class TradEntry(Component):
+class TradeEntry(Component):
 
     implements(
         IRequestHandler,
