@@ -191,7 +191,7 @@ function setIndicators() {
 	for (var i in lines) {
 		pLines[i] = [];
 		mLines[i] = [];
-		iLines[i] = [];
+		// iLines[i] = [];
 		sLines[i] = [];
 		pLinesX[i] = [];
 		pLinesY[i] = [];
@@ -205,13 +205,13 @@ function setIndicators() {
 		for (var w = 0; w < weightsY.length; w++) {
 			mUp += weightsY[w] * lines[i][m+w][4];
 			mDown += weightsY[w] * lines[i][m+w][5];
-			mLowIndex += weightsY[w] * lines[i][m+w][6];
-			mHighIndex += weightsY[w] * lines[i][m+w][7];
+			// mLowIndex += weightsY[w] * lines[i][m+w][6];
+			// mHighIndex += weightsY[w] * lines[i][m+w][7];
 			mS += weightsY[w] * lines[i][m+w][8];
 		}
 		pLines[i].push([lines[i][m][0], lines[i][m][3]]);
 		mLines[i].push([lines[i][m][0], mUp/(mUp + mDown)]);
-		iLines[i].push([lines[i][m][0], mLowIndex/(mLowIndex + mHighIndex)]);
+		// iLines[i].push([lines[i][m][0], mLowIndex/(mLowIndex + mHighIndex)]);
 		sLines[i].push([lines[i][m][0], mS]);
 		}
 		for (x in pLines[i]) {
@@ -238,8 +238,8 @@ $(document).ready(function() {
 	while (prices_[r+nrofperiods] !== undefined) {
 		var lowIndex = r, highIndex = r, low = prices_[r][3], high = prices_[r][3];
 		for (var m = 0; m < nrofperiods; m++) {
-			lowIndex = (prices_[r+m][3] < low) ? r+m : lowIndex;
-			highIndex = (prices_[r+m][3] > high) ? r+m : highIndex;
+			// lowIndex = (prices_[r+m][3] < low) ? r+m : lowIndex;
+			// highIndex = (prices_[r+m][3] > high) ? r+m : highIndex;
 			low = Math.min(low, prices_[r+m][3]);
 			high = Math.max(high, prices_[r+m][3]);
 		}
