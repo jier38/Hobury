@@ -102,6 +102,7 @@ class TradeEntry(Component):
                     data['executionprice'] = executionprice
                     add_warning(req, 'Please enter valid symbol or name.')
                 else:
+			# Check whether price does not exceed 110% of the average close from last 10 days
                     sql = (
                               "SELECT IFNULL(avg(close), 0)*(1+0.1) " 
                               "FROM invest.prices WHERE exchange = %s and symbol = %s "
