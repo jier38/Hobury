@@ -17,8 +17,8 @@ ${ super() }
 <body>
 # block content
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script type="text/javascript" src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
+<script type="text/javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <script type="text/javascript" src="https://cdn.plot.ly/plotly-2.9.0.min.js"></script>
 <script type="text/javascript" src="chrome/site/prefix.js"></script>
 <script type="text/javascript" src="chrome/site/components.js"></script>
@@ -201,18 +201,20 @@ function setIndicators() {
 		sLinesY[i] = [];
 		// Second order statistics: mRS, mI and mS; also pLines (prices) is generated
 		for (var m = 0; m < lines[i].length-nrofperiods; m++) {
-		var mUp = 0, mDown = 0, mLowIndex = 0, mHighIndex = 0, mS = 0;
-		for (var w = 0; w < weightsY.length; w++) {
-			mUp += weightsY[w] * lines[i][m+w][4];
-			mDown += weightsY[w] * lines[i][m+w][5];
-			// mLowIndex += weightsY[w] * lines[i][m+w][6];
-			// mHighIndex += weightsY[w] * lines[i][m+w][7];
-			mS += weightsY[w] * lines[i][m+w][8];
-		}
-		pLines[i].push([lines[i][m][0], lines[i][m][3]]);
-		mLines[i].push([lines[i][m][0], mUp/(mUp + mDown)]);
-		// iLines[i].push([lines[i][m][0], mLowIndex/(mLowIndex + mHighIndex)]);
-		sLines[i].push([lines[i][m][0], mS]);
+			if (lines[i][0][3] >document.getElementById("p_threshold").value) {
+				var mUp = 0, mDown = 0, mLowIndex = 0, mHighIndex = 0, mS = 0;
+				for (var w = 0; w < weightsY.length; w++) {
+					mUp += weightsY[w] * lines[i][m+w][4];
+					mDown += weightsY[w] * lines[i][m+w][5];
+					// mLowIndex += weightsY[w] * lines[i][m+w][6];
+					// mHighIndex += weightsY[w] * lines[i][m+w][7];
+					mS += weightsY[w] * lines[i][m+w][8];
+				}
+			}
+			pLines[i].push([lines[i][m][0], lines[i][m][3]]);
+			mLines[i].push([lines[i][m][0], mUp/(mUp + mDown)]);
+			// iLines[i].push([lines[i][m][0], mLowIndex/(mLowIndex + mHighIndex)]);
+			sLines[i].push([lines[i][m][0], mS]);
 		}
 		for (x in pLines[i]) {
 			pLinesX[i].push(pLines[i][x][0]);
@@ -262,7 +264,6 @@ $(document).ready(function() {
 	refresh();
 })
 
-$(document).tooltip();
 </script>
 # endblock content
 </body>
