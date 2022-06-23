@@ -52,12 +52,7 @@ class TradeEntry(Component):
             return 'trade_list.html', data, {}
         else:
             data = {}
-            cursor = self.env.db_query(
-                         "SELECT value FROM invest.parameters "
-                         "WHERE type = 'tolerance' and metric = 'quantity' "
-                         "LIMIT 1"
-                     )
-            data['tolerance'] = [(row[0]) for row in cursor]
+            data['tolerance'] = 10000
             cursor = self.env.db_query(
                          "SELECT distinct currency as metric from invest.exchanges order by currency"
                      )
@@ -108,9 +103,7 @@ class TradeEntry(Component):
                     add_warning(req, 'Please enter valid symbol or name.')
                 else:
                     sql = (
-                              "SELECT IFNULL(avg(close), 0)*(1+( "
-                              "SELECT avg(value) FROM invest.parameters "
-                              "WHERE type = 'tolerance' and metric = 'cash')) " 
+                              "SELECT IFNULL(avg(close), 0)*(1+0.1) " 
                               "FROM invest.prices WHERE exchange = %s and symbol = %s "
                               "and datediff(now(), date) < 10"
                           )
