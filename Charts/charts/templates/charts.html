@@ -201,7 +201,7 @@ function setIndicators() {
 		sLinesY[i] = [];
 		// Second order statistics: mRS, mI and mS; also pLines (prices) is generated
 		for (var m = 0; m < lines[i].length-nrofperiods; m++) {
-			if (lines[i][0][3] >document.getElementById("p_threshold").value) {
+			//if (lines[i][0][3] >document.getElementById("p_threshold").value) {
 				var mUp = 0, mDown = 0, mLowIndex = 0, mHighIndex = 0, mS = 0;
 				for (var w = 0; w < weightsY.length; w++) {
 					mUp += weightsY[w] * lines[i][m+w][4];
@@ -210,7 +210,7 @@ function setIndicators() {
 					// mHighIndex += weightsY[w] * lines[i][m+w][7];
 					mS += weightsY[w] * lines[i][m+w][8];
 				}
-			}
+			//}
 			pLines[i].push([lines[i][m][0], lines[i][m][3]]);
 			mLines[i].push([lines[i][m][0], mUp/(mUp + mDown)]);
 			// iLines[i].push([lines[i][m][0], mLowIndex/(mLowIndex + mHighIndex)]);
