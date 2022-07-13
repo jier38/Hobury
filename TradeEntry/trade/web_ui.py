@@ -164,6 +164,8 @@ class TradeEntry(Component):
                             req, 'The cash/quantity exceeds the price tolerance of the last 10 days.'
                         )
                     else:
+                        if(type.lower()=='verkoop'):
+                            cash = -1 * abs(cash)
                         sql = (
                                   "INSERT INTO invest.trades "
                                   "(portfolio, type, quantity, exchange, symbol, cash, currency, date, description, executionprice) "
